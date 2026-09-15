@@ -1,0 +1,232 @@
+@import "tailwindcss";
+
+:root {
+  /* Neutral surface — shared across all three brands (from ../udvash-unmesh-uttoron_website/tokens.md) */
+  --color-bg-canvas: #FAFAFA;
+  --color-surface: #FFFFFF;
+  --color-border: #E0E0E0;
+  --color-text-primary: #1A1A1A;
+  --color-text-secondary: #5F5F5F;
+
+  --color-success: #2E7D32;
+  --color-warning: #ED6C02;
+  --color-error: #D32F2F;
+  --color-info: #0288D1;
+
+  --font-heading: var(--font-noto-sans-bengali), "Noto Sans Bengali", Inter, sans-serif;
+  --type-h1: 32px;
+  --type-h1-mobile: 24px;
+  --type-h2: 24px;
+  --type-h3: 20px;
+  --type-body: 16px;
+  --type-small: 14px;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  --space-unit: 8px;
+  --space-xs: 8px;
+  --space-sm: 16px;
+  --space-md: 24px;
+  --space-lg: 32px;
+  --space-xl: 48px;
+  --space-2xl: 64px;
+
+  --radius-sm: 12px;
+  --radius-md: 16px;
+  --radius-lg: 20px;
+  --radius-full: 999px;
+
+  --shadow-subtle: 0 1px 3px rgba(0, 0, 0, 0.08);
+  --shadow-medium: 0 4px 12px rgba(0, 0, 0, 0.12);
+  --shadow-high: 0 12px 32px rgba(0, 0, 0, 0.18);
+
+  /* Default brand: Udvash (the PDF draft's hero gradient matches this primary/secondary pair) */
+  --color-brand-primary: #9F1C2E;
+  --color-brand-secondary: #F39C12;
+
+  /* Icon-tile background tint: full-strength in light mode, dimmed in dark mode */
+  --icon-bg-opacity: 1;
+}
+
+[data-brand="unmesh"] {
+  --color-brand-primary: #8E24AA;
+  --color-brand-secondary: #F06292;
+}
+[data-brand="uttoron"] {
+  --color-brand-primary: #5B2C91;
+  --color-brand-secondary: #2E86C1;
+}
+
+[data-theme="dark"] {
+  --color-bg-canvas: #121214;
+  --color-surface: #1C1C1F;
+  --color-border: #303034;
+  --color-text-primary: #F2F2F3;
+  --color-text-secondary: #A3A3A8;
+
+  --shadow-subtle: 0 1px 3px rgba(0, 0, 0, 0.4);
+  --shadow-medium: 0 4px 12px rgba(0, 0, 0, 0.45);
+  --shadow-high: 0 12px 32px rgba(0, 0, 0, 0.55);
+
+  --icon-bg-opacity: 0.1;
+}
+
+@theme inline {
+  --color-background: var(--color-bg-canvas);
+  --color-foreground: var(--color-text-primary);
+  --font-sans: var(--font-heading);
+}
+
+body {
+  background: var(--color-bg-canvas);
+  color: var(--color-text-primary);
+  font-family: var(--font-heading);
+}
+
+.material-symbols-rounded {
+  font-family: "Material Symbols Rounded";
+  font-weight: normal;
+  font-style: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  font-variation-settings: "FILL" 1, "wght" 400, "GRAD" 0, "opsz" 24;
+}
+
+@keyframes role-glow {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.12);
+    opacity: 0.6;
+  }
+}
+
+.animate-role-glow {
+  animation: role-glow 2.8s ease-in-out infinite;
+}
+
+@keyframes banner-shine {
+  0% {
+    transform: translateX(-150%) skewX(-15deg);
+  }
+  55% {
+    transform: translateX(400%) skewX(-15deg);
+  }
+  100% {
+    transform: translateX(400%) skewX(-15deg);
+  }
+}
+
+.animate-banner-shine {
+  animation: banner-shine 4.5s ease-in-out infinite;
+}
+
+/* ---- Micro-interactions: page transitions, dropdowns, modals, pull-to-refresh ----
+   All ~150-300ms, ease-out, no bounce. Disabled entirely under prefers-reduced-motion. */
+
+@keyframes page-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.animate-page-fade-in {
+  animation: page-fade-in 220ms ease-out both;
+}
+
+@keyframes dropdown-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px) scaleY(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scaleY(1);
+  }
+}
+.animate-dropdown-in {
+  animation: dropdown-in 180ms ease-out both;
+  transform-origin: top;
+}
+
+@keyframes modal-in {
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+.animate-modal-in {
+  animation: modal-in 200ms ease-out both;
+}
+
+@keyframes backdrop-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.animate-backdrop-in {
+  animation: backdrop-in 200ms ease-out both;
+}
+
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.animate-toast-in {
+  animation: toast-in 220ms ease-out both;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.animate-spin-slow {
+  animation: spin 700ms linear infinite;
+}
+
+.tap {
+  transition: transform 150ms ease-out, background-color 150ms ease-out, opacity 150ms ease-out;
+}
+.tap:active {
+  transform: scale(0.97);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  .tap:active {
+    transform: none;
+  }
+}
