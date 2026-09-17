@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import AppHeader from "@/components/AppHeader";
 import BackButton from "@/components/BackButton";
 import BottomNav from "@/components/BottomNav";
 import PullToRefresh from "@/components/PullToRefresh";
@@ -38,15 +39,16 @@ export default function ProgramsPage() {
 
   return (
     <>
-      <header className="flex items-center gap-3 px-4 py-3">
-        <BackButton href="/" />
-        <h1 className="text-base font-bold leading-none text-[var(--color-text-primary)]">প্রোগ্রামসমূহ</h1>
+      <AppHeader />
+      <header className="relative mb-2 flex items-center justify-center gap-3 px-4 py-3">
+        <span className="absolute left-4"><BackButton href="/" /></span>
+        <h1 className="font-heading text-[18px] font-semibold leading-none text-[#616161]">প্রোগ্রামসমূহ</h1>
       </header>
 
       <main className="flex-1 px-4 pb-6">
        <PullToRefresh>
         <div className="flex items-center gap-2">
-          <div className="flex flex-1 items-center gap-2 rounded-[var(--radius-lg)] border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2.5 transition-colors duration-150 ease-out has-[:focus-visible]:border-[var(--color-brand-primary)]">
+          <div className="flex flex-1 items-center gap-2 rounded-[5px] border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2.5 transition-colors duration-150 ease-out has-[:focus-visible]:border-[var(--color-brand-primary)]">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--color-text-secondary)" strokeWidth="2">
               <circle cx="11" cy="11" r="7" />
               <path d="M21 21l-4.35-4.35" strokeLinecap="round" />
@@ -63,7 +65,7 @@ export default function ProgramsPage() {
             onClick={() => setFilterOpen((v) => !v)}
             aria-label="ফিল্টার"
             aria-expanded={filterOpen}
-            className="tap relative flex h-10 w-10 shrink-0 items-center justify-center rounded-[var(--radius-lg)] border"
+            className="tap relative flex h-10 w-10 shrink-0 items-center justify-center rounded-[5px] border"
             style={
               filterOpen || mode !== "All"
                 ? { background: "var(--color-brand-primary)", borderColor: "var(--color-brand-primary)" }
@@ -87,7 +89,7 @@ export default function ProgramsPage() {
         </div>
 
         {filterOpen && (
-          <div className="animate-dropdown-in mt-3 rounded-[var(--radius-lg)] border border-[var(--color-border)] bg-[var(--color-surface)] p-3">
+          <div className="animate-dropdown-in mt-3 rounded-[5px] border border-[var(--color-border)] bg-[var(--color-surface)] p-3">
             <p className="mb-2 text-xs font-semibold text-[var(--color-text-secondary)]">ক্লাস মোড</p>
             <div className="flex flex-wrap gap-2">
               {MODES.map((m) => {

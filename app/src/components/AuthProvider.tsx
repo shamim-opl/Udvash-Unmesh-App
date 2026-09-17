@@ -5,11 +5,14 @@ import { createContext, useContext, useEffect, useState } from "react";
 export type UserProfile = {
   name: string;
   phone: string;
-  role: "student" | "teacher";
-  gender?: "male" | "female";
+  role: "student" | "teacher" | "guardian";
+  gender?: string;
+  religion?: string;
+  email?: string;
   studentClass?: string;
-  division?: string;
-  district?: string;
+  branch?: string;
+  registrationNo?: string;
+  password?: string;
 };
 
 const KNOWN_PROFILES_KEY = "knownProfiles";
@@ -28,12 +31,14 @@ const AuthContext = createContext<{
   login: (profile: UserProfile) => void;
   logout: () => void;
   findProfileByPhone: (phone: string) => UserProfile | null;
+  findProfileByIdentifier: (identifier: string) => UserProfile | null;
 }>({
   isLoggedIn: false,
   profile: null,
   login: () => {},
   logout: () => {},
   findProfileByPhone: () => null,
+  findProfileByIdentifier: () => null,
 });
 
 export function useAuth() {
@@ -69,7 +74,18 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
 
   const findProfileByPhone = (phone: string) => readKnownProfiles()[phone] ?? null;
 
+  const findProfileByIdentifier = (identifier: string) => {
+    const known = readKnownProfiles();
+    return (
+      Object.values(known).find((p) => p.phone === identifier || p.registrationNo === identifier) ?? null
+    );
+  };
+
   return (
-    <AuthContext.Provider value={{ isLoggedIn, profile, login, logout, findProfileByPhone }}>{children}</AuthContext.Provider>
+    <AuthContext.Provider
+      value={{ isLoggedIn, profile, login, logout, findProfileByPhone, findProfileByIdentifier }}
+    >
+      {children}
+    </AuthContext.Provider>
   );
 }

@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import AppHeader from "@/components/AppHeader";
 import BackButton from "@/components/BackButton";
 import BottomNav from "@/components/BottomNav";
 import { useAuth } from "@/components/AuthProvider";
@@ -31,9 +32,10 @@ export default function ProfilePage() {
 
   return (
     <>
-      <header className="flex items-center gap-3 px-4 py-3">
-        <BackButton href="/" />
-        <h1 className="text-base font-bold leading-none text-[var(--color-text-primary)]">Profile</h1>
+      <AppHeader />
+      <header className="relative mb-2 flex items-center justify-center gap-3 px-4 py-3">
+        <span className="absolute left-4"><BackButton href="/" /></span>
+        <h1 className="font-heading text-[18px] font-semibold leading-none text-[#616161]">Profile</h1>
       </header>
 
       <main className="flex-1 px-4 pb-6">
@@ -52,15 +54,15 @@ export default function ProfilePage() {
             className="rounded-full px-3 py-1 text-xs font-semibold text-white"
             style={{ background: "var(--color-brand-primary)" }}
           >
-            {profile.role === "teacher" ? "Teacher" : "Student"}
+            {profile.role === "teacher" ? "Teacher" : profile.role === "guardian" ? "Guardian" : "Student"}
           </span>
         </div>
 
         <div className="rounded-[var(--radius-lg)] bg-[var(--color-surface)] px-4 shadow-[var(--shadow-subtle)]">
+          <InfoRow label="Registration No" value={profile.registrationNo} />
           <InfoRow label="Gender" value={profile.gender === "male" ? "ছেলে" : profile.gender === "female" ? "মেয়ে" : undefined} />
           <InfoRow label="Class" value={profile.studentClass} />
-          <InfoRow label="Division" value={profile.division} />
-          <InfoRow label="District" value={profile.district} />
+          <InfoRow label="Nearest Branch" value={profile.branch} />
         </div>
 
         <button

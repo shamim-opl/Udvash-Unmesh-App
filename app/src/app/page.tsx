@@ -20,24 +20,24 @@ export default function Home() {
               <ServiceCard
                 href="/free-courses"
                 icon={
-                  <span className="material-symbols-rounded" style={{ fontSize: 26, color: "var(--color-brand-primary)" }}>
+                  <span className="material-symbols-rounded" style={{ fontSize: 26, color: "#FC5A5A" }}>
                     school
                   </span>
                 }
-                iconBg="#FFE4E4"
+                iconBg="#FC5A5A"
                 title="ট্রায়াল / ফ্রি কোর্স"
-                subtitle="বিনামূল্যে কোর্স ও ট্রায়াল ক্লাস"
+                subtitle="শেখা শুরু হোক একদম বিনামূল্যে"
               />
               <ServiceCard
                 href="/programs"
                 icon={
-                  <span className="material-symbols-rounded" style={{ fontSize: 26, color: "var(--color-info)" }}>
+                  <span className="material-symbols-rounded" style={{ fontSize: 26, color: "#00BA00" }}>
                     menu_book
                   </span>
                 }
-                iconBg="#E1F0FF"
+                iconBg="#00BA00"
                 title="প্রোগ্রামসমূহ"
-                subtitle="সকল প্রোগ্রাম ও কোর্স"
+                subtitle="আপনার প্রয়োজন অনুযায়ী বেছে নিন"
               />
             </div>
           </section>

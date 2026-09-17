@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import AppHeader from "@/components/AppHeader";
 import BottomNav from "@/components/BottomNav";
-import BackButton from "@/components/BackButton";
 import PullToRefresh from "@/components/PullToRefresh";
 import { DIVISIONS } from "@/data/branches";
 
@@ -29,11 +29,7 @@ export default function BranchesPage() {
 
   return (
     <>
-      <header className="flex items-center gap-3 px-4 py-3">
-        <BackButton href="/" />
-        <h1 className="text-base font-bold leading-none text-[var(--color-text-primary)]">Branches</h1>
-      </header>
-
+      <AppHeader />
       <main className="flex-1 px-4 pb-6">
        <PullToRefresh>
         <div className="relative aspect-[1900/560] w-full overflow-hidden rounded-[8px]">
@@ -50,7 +46,7 @@ export default function BranchesPage() {
           সারা দেশে আমাদের {totalBranches}+ শাখা
         </p>
 
-        <div className="mt-3 flex items-center gap-2 rounded-[var(--radius-lg)] border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2.5 transition-colors duration-150 ease-out has-[:focus-visible]:border-[var(--color-brand-primary)]">
+        <div className="mt-3 flex items-center gap-2 rounded-[5px] border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2.5 transition-colors duration-150 ease-out has-[:focus-visible]:border-[var(--color-brand-primary)]">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--color-text-secondary)" strokeWidth="2">
             <circle cx="11" cy="11" r="7" />
             <path d="M21 21l-4.35-4.35" strokeLinecap="round" />

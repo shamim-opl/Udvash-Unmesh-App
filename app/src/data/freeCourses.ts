@@ -17,12 +17,43 @@ export const CLASS_LEVELS: ClassLevel[] = [
   { slug: "class-12", number: "১২", label: "ক্লাস ১২", bg: "#FCE4EC", color: "#D81B60" },
 ];
 
+export type Lesson = {
+  title: string;
+  durationSec: number;
+};
+
 export type FreeCourse = {
   title: string;
   subject: string;
   videoCount: number;
   description: string;
+  lessons: Lesson[];
 };
+
+const BENGALI_DIGITS = ["০", "১", "২", "৩", "৪", "৫", "৬", "৭", "৮", "৯"];
+
+export function toBengaliDigits(n: number): string {
+  return String(Math.max(0, Math.floor(n)))
+    .split("")
+    .map((d) => BENGALI_DIGITS[Number(d)] ?? d)
+    .join("");
+}
+
+export function formatDuration(totalSeconds: number): string {
+  const m = Math.floor(totalSeconds / 60);
+  const s = Math.floor(totalSeconds % 60);
+  return `${toBengaliDigits(m)}:${toBengaliDigits(s).padStart(2, "০")}`;
+}
+
+const LESSON_TITLES = [
+  "কোর্স পরিচিতি ও শুরুর প্রস্তুতি",
+  "মূল ধারণা ও বেসিক আলোচনা",
+  "উদাহরণসহ বিস্তারিত ব্যাখ্যা",
+  "অনুশীলনী ও সমস্যা সমাধান",
+  "রিভিশন ও গুরুত্বপূর্ণ টিপস",
+];
+
+const LESSON_DURATIONS_SEC = [12 * 60 + 34, 18 * 60 + 5, 15 * 60 + 20, 20 * 60 + 10, 10 * 60 + 45];
 
 // Placeholder: one free course per class, pending a real per-class catalog from udvash.com.
 export const FREE_COURSES: Record<string, FreeCourse> = Object.fromEntries(
@@ -33,6 +64,7 @@ export const FREE_COURSES: Record<string, FreeCourse> = Object.fromEntries(
       subject: "সকল বিষয়",
       videoCount: 5,
       description: "সম্পূর্ণ বিনামূল্যে! নিজের বিষয়ের ফ্রি কোর্স আজই শুরু করো এবং শিক্ষকের পড়ানোর ধরন নিজে অনুভব করো।",
+      lessons: LESSON_TITLES.map((title, i) => ({ title, durationSec: LESSON_DURATIONS_SEC[i] })),
     } satisfies FreeCourse,
   ])
 );

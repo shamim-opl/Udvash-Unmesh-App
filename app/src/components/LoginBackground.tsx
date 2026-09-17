@@ -4,7 +4,7 @@ export default function LoginBackground() {
     width: 162,
     height: 162,
     borderRadius: 30,
-    background: "#FFEAEB",
+    background: "#F5EDFF",
     filter: "blur(40px)",
     transform: "rotate(-40.33deg)",
   };
