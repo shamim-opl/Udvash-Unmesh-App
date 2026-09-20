@@ -16,28 +16,22 @@ export default function Home() {
             <h2 className="mb-3 text-sm font-medium text-[var(--color-text-secondary)] opacity-70">
               তোমার জন্য
             </h2>
-            <div className="flex flex-col gap-3">
+            <div className="grid grid-cols-2 gap-3">
               <ServiceCard
                 href="/free-courses"
-                icon={
-                  <span className="material-symbols-rounded" style={{ fontSize: 26, color: "#FC5A5A" }}>
-                    school
-                  </span>
-                }
-                iconBg="#FC5A5A"
+                icon="school"
+                accent="#FC5A5A"
                 title="ট্রায়াল / ফ্রি কোর্স"
-                subtitle="শেখা শুরু হোক একদম বিনামূল্যে"
+                subtitle="বিনামূল্যে ক্লাস দেখে শেখা শুরু করুন"
+                cta="শুরু করুন"
               />
               <ServiceCard
                 href="/programs"
-                icon={
-                  <span className="material-symbols-rounded" style={{ fontSize: 26, color: "#00BA00" }}>
-                    menu_book
-                  </span>
-                }
-                iconBg="#00BA00"
+                icon="menu_book"
+                accent="#00BA00"
                 title="প্রোগ্রামসমূহ"
-                subtitle="আপনার প্রয়োজন অনুযায়ী বেছে নিন"
+                subtitle="আপনার প্রয়োজন অনুযায়ী সঠিক প্রোগ্রাম খুঁজুন"
+                cta="দেখুন"
               />
             </div>
           </section>
