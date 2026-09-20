@@ -1,9 +1,11 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { useTheme } from "@/components/ThemeProvider";
 import { useAuth } from "@/components/AuthProvider";
+import { MoonIcon, SunIcon } from "@/components/nav-icons";
 
 const NOTIFICATIONS = [
   {
@@ -48,10 +50,12 @@ export default function AppHeader() {
   }, [open]);
 
   const unreadCount = NOTIFICATIONS.filter((n) => n.unread).length;
+  const iconBg = theme === "dark" ? "color-mix(in srgb, var(--color-brand-primary) 18%, white)" : "color-mix(in srgb, var(--color-brand-primary) 10%, transparent)";
+  const iconColor = "var(--color-brand-primary)";
 
   return (
     <header className="relative flex items-center justify-between px-4 py-3" ref={containerRef}>
-      <div className="flex items-center gap-2.5">
+      <Link href="/" className="tap flex items-center gap-2.5">
         <Image
           src={theme === "dark" ? "/logo-dark.png" : "/logo.png"}
           alt="উদ্ভাস-উন্মেষ Online Care"
@@ -59,22 +63,16 @@ export default function AppHeader() {
           height={theme === "dark" ? 30 : 39}
           className="h-8 w-auto"
         />
-      </div>
+      </Link>
 
       <div className="flex items-center gap-2">
         <button
           type="button"
           aria-label={theme === "dark" ? "লাইট মোড" : "ডার্ক মোড"}
           onClick={toggleTheme}
-          className="tap flex h-9 w-9 items-center justify-center rounded-full text-[var(--color-text-secondary)]"
-          style={{ background: "color-mix(in srgb, var(--color-text-primary) 8%, transparent)" }}
+          className="tap flex h-9 w-9 items-center justify-center rounded-full"
         >
-          <span
-            className="material-symbols-rounded"
-            style={{ fontSize: 20, fontVariationSettings: "'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24" }}
-          >
-            {theme === "dark" ? "light_mode" : "brightness_2"}
-          </span>
+          {theme === "dark" ? <SunIcon /> : <MoonIcon />}
         </button>
 
         {isLoggedIn && (
@@ -83,21 +81,31 @@ export default function AppHeader() {
             aria-label="বিজ্ঞপ্তি"
             aria-expanded={open}
             onClick={() => setOpen((v) => !v)}
-            className="tap relative flex h-9 w-9 items-center justify-center rounded-full text-[var(--color-text-primary)]"
-            style={{ background: "var(--color-border)" }}
+            className="tap relative flex h-9 w-9 items-center justify-center rounded-full"
+            style={{ background: iconBg, color: iconColor }}
           >
             <span
               className="material-symbols-rounded"
               style={{
                 fontSize: 22,
-                color: unreadCount > 0 ? "var(--color-brand-primary)" : "var(--color-text-primary)",
-                fontVariationSettings: `'FILL' ${unreadCount > 0 ? 1 : 0}, 'wght' 400, 'GRAD' 0, 'opsz' 24`,
+                color: iconColor,
+                fontVariationSettings: "'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24",
               }}
             >
-              notifications_unread
+              notifications_active
             </span>
+            {unreadCount > 0 && (
+              <span
+                aria-hidden
+                className="absolute -right-0.5 -top-0.5 flex h-4 w-4 items-center justify-center rounded-full text-[10px] font-bold text-white"
+                style={{ background: "#FF3A3A" }}
+              >
+                {unreadCount}
+              </span>
+            )}
           </button>
         )}
+
       </div>
 
       {open && (

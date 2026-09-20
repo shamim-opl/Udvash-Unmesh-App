@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
+import AppHeader from "@/components/AppHeader";
 import BackButton from "@/components/BackButton";
 import BottomNav from "@/components/BottomNav";
 import { useAuth } from "@/components/AuthProvider";
@@ -41,9 +42,10 @@ export default function FreeCoursesClassPage() {
   if (!classLevel || !course) {
     return (
       <>
-        <header className="flex items-center gap-3 px-4 py-3">
-          <BackButton href="/free-courses" />
-          <h1 className="text-base font-bold leading-none text-[var(--color-text-primary)]">ট্রায়াল / ফ্রি কোর্স</h1>
+        <AppHeader />
+        <header className="relative mb-2 flex items-center justify-center gap-3 px-4 py-3">
+          <span className="absolute left-4"><BackButton href="/free-courses" /></span>
+          <h1 className="font-heading text-[18px] font-semibold leading-none text-[#616161]">ট্রায়াল / ফ্রি কোর্স</h1>
         </header>
         <main className="flex flex-1 items-center justify-center px-8 text-center">
           <p className="text-sm text-[var(--color-text-secondary)]">এই শ্রেণির কোনো ফ্রি কোর্স পাওয়া যায়নি।</p>
@@ -55,9 +57,9 @@ export default function FreeCoursesClassPage() {
 
   return (
     <>
-      <header className="flex items-center gap-3 px-4 py-3">
-        <BackButton href="/free-courses" />
-        <h1 className="text-base font-bold leading-none text-[var(--color-text-primary)]">{classLevel.label}</h1>
+      <header className="relative mb-2 flex items-center justify-center gap-3 px-4 py-3">
+        <span className="absolute left-4"><BackButton href="/free-courses" /></span>
+        <h1 className="font-heading text-[18px] font-semibold leading-none text-[#616161]">{classLevel.label}</h1>
       </header>
 
       <main className="flex-1 px-4 pb-6">

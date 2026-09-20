@@ -2,7 +2,9 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
+import AppHeader from "@/components/AppHeader";
 import BackButton from "@/components/BackButton";
+import BottomNav from "@/components/BottomNav";
 import { CLASS_LEVELS, FREE_COURSES, formatDuration } from "@/data/freeCourses";
 
 function readCompleted(slug: string): number[] {
@@ -118,9 +120,13 @@ export default function WatchCoursePage() {
 
   if (!classLevel || !course) {
     return (
-      <main className="flex flex-1 items-center justify-center px-8 text-center">
-        <p className="text-sm text-[var(--color-text-secondary)]">কোর্সটি পাওয়া যায়নি।</p>
-      </main>
+      <>
+        <AppHeader />
+        <main className="flex flex-1 items-center justify-center px-8 text-center">
+          <p className="text-sm text-[var(--color-text-secondary)]">কোর্সটি পাওয়া যায়নি।</p>
+        </main>
+        <BottomNav />
+      </>
     );
   }
 
@@ -154,12 +160,14 @@ export default function WatchCoursePage() {
 
   return (
     <>
-      <header className="flex items-center gap-3 px-4 py-3">
-        <BackButton href={`/free-courses/${slug}`} />
-        <h1 className="truncate text-base font-bold leading-none text-[var(--color-text-primary)]">{course.title}</h1>
+      <AppHeader />
+      <header className="relative mb-2 flex items-center justify-center gap-3 px-4 py-3">
+        <span className="absolute left-4"><BackButton href={`/free-courses/${slug}`} /></span>
+        <h1 className="font-heading truncate text-[18px] font-semibold leading-none text-[#616161]">{course.title}</h1>
       </header>
 
       <main className="flex-1 pb-6">
+        <div className="lg:grid lg:grid-cols-[2fr_1fr] lg:items-start lg:gap-6">
         <div
           ref={playerRef}
           className={
@@ -387,7 +395,9 @@ export default function WatchCoursePage() {
             })}
           </div>
         </div>
+        </div>
       </main>
+      <BottomNav />
     </>
   );
 }

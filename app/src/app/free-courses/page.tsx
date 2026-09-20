@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import AppHeader from "@/components/AppHeader";
 import BackButton from "@/components/BackButton";
 import BottomNav from "@/components/BottomNav";
 import { CLASS_LEVELS } from "@/data/freeCourses";
@@ -8,9 +9,10 @@ import { CLASS_LEVELS } from "@/data/freeCourses";
 export default function FreeCoursesPage() {
   return (
     <>
-      <header className="mb-4 flex items-center gap-3 px-4 py-3">
-        <BackButton href="/" />
-        <h1 className="text-base font-bold leading-none text-[var(--color-text-primary)]">ট্রায়াল / ফ্রি কোর্স</h1>
+      <AppHeader />
+      <header className="relative mb-2 flex items-center justify-center gap-3 px-4 py-3">
+        <span className="absolute left-4"><BackButton href="/" /></span>
+        <h1 className="font-heading text-[18px] font-semibold leading-none text-[#616161]">ট্রায়াল / ফ্রি কোর্স</h1>
       </header>
 
       <main className="flex-1 px-4 pb-6">

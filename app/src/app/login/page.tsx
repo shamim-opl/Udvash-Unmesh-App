@@ -1,26 +1,116 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { DIVISION_DISTRICTS, CLASSES } from "@/data/districts";
+import { CLASSES } from "@/data/districts";
+import { DIVISIONS } from "@/data/branches";
 import { useAuth } from "@/components/AuthProvider";
 import { useTheme } from "@/components/ThemeProvider";
-import LoginBackground from "@/components/LoginBackground";
+import AppHeader from "@/components/AppHeader";
+import BottomNav from "@/components/BottomNav";
 import BackButton from "@/components/BackButton";
 
-type Step = "role" | "phone" | "otp" | "name" | "gender" | "class" | "location" | "success";
+type Role = "student" | "teacher" | "guardian";
+type Step =
+  | "role"
+  | "auth"
+  | "loginId"
+  | "loginPassword"
+  | "basicInfo"
+  | "otp"
+  | "alreadyRegistered"
+  | "personalDetails"
+  | "setPassword"
+  | "success";
 
-const STUDENT_STEP_ORDER: Step[] = ["role", "phone", "otp", "name", "gender", "class", "location", "success"];
-const TEACHER_STEP_ORDER: Step[] = ["role", "phone", "otp", "name", "gender", "location", "success"];
+const ROLES: { key: Role; label: string; sub: string; icon: string }[] = [
+  { key: "student", label: "Student", sub: "শিক্ষার্থী", icon: "school" },
+  { key: "teacher", label: "Teacher", sub: "শিক্ষক", icon: "person_edit" },
+  { key: "guardian", label: "Guardian", sub: "অভিভাবক", icon: "family_restroom" },
+];
 
-const ROLES = [
-  { key: "student", label: "Student", icon: "school", bg: "#E9DFEE", color: "var(--color-brand-primary)" },
-  { key: "teacher", label: "Teacher", icon: "person_edit", bg: "#F0E5FB", color: "#8E24AA" },
-] as const;
+const RELIGIONS = ["ইসলাম", "হিন্দু", "খ্রিস্টান", "বৌদ্ধ", "অন্যান্য"];
 
-function PrimaryButton({
+function generateRegNo() {
+  return String(Math.floor(1000000 + Math.random() * 8999999));
+}
+
+function Card({ children }: { children: React.ReactNode }) {
+  return <div className="flex flex-1 flex-col justify-center px-6">{children}</div>;
+}
+
+function CardTitle({ title, sub }: { title: string; sub: string }) {
+  return (
+    <div className="mb-5 text-center">
+      <h1 className="font-heading text-[26px] font-medium leading-tight text-[var(--color-text-primary)]">{title}</h1>
+      <p className="mt-1 text-sm font-medium text-[var(--color-text-secondary)]">{sub}</p>
+    </div>
+  );
+}
+
+function FieldLabel({ children }: { children: React.ReactNode }) {
+  return <p className="mb-1.5 text-sm text-[var(--color-text-primary)]">{children}</p>;
+}
+
+function TextField({
+  value,
+  onChange,
+  placeholder,
+  type = "text",
+  inputMode,
+  rightIcon,
+}: {
+  value: string;
+  onChange: (v: string) => void;
+  placeholder: string;
+  type?: string;
+  inputMode?: "text" | "numeric" | "email";
+  rightIcon?: React.ReactNode;
+}) {
+  return (
+    <div
+      className="mb-4 flex items-center gap-2 rounded-[5px] border bg-[var(--color-field-fill)] px-3 py-2.5"
+      style={{ borderColor: "var(--color-border)" }}
+    >
+      <input
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        placeholder={placeholder}
+        type={type}
+        inputMode={inputMode}
+        className="flex-1 bg-transparent text-sm text-[var(--color-text-primary)] outline-none placeholder:text-[var(--color-text-secondary)]"
+      />
+      {rightIcon}
+    </div>
+  );
+}
+
+function SelectField({
+  value,
+  onChange,
+  placeholder,
+  children,
+}: {
+  value: string;
+  onChange: (v: string) => void;
+  placeholder: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <select
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+      className="mb-4 w-full rounded-[5px] border bg-[var(--color-field-fill)] px-3 py-2.5 text-sm text-[var(--color-text-primary)] outline-none"
+      style={{ borderColor: "var(--color-border)" }}
+    >
+      <option value="">{placeholder}</option>
+      {children}
+    </select>
+  );
+}
+
+function CardButton({
   children,
   onClick,
   disabled,
@@ -34,37 +124,55 @@ function PrimaryButton({
       type="button"
       onClick={onClick}
       disabled={disabled}
-      className="w-full rounded-[5px] py-3.5 text-sm font-bold transition-[transform,background-color,color,border-color] duration-200 ease-out active:scale-[0.98]"
-      style={
-        disabled
-          ? {
-              background: "color-mix(in srgb, var(--color-brand-primary) 18%, var(--color-surface))",
-              color: "var(--color-brand-primary)",
-              border: "1px solid color-mix(in srgb, var(--color-brand-primary) 25%, transparent)",
-            }
-          : { background: "var(--color-brand-primary)", color: "white", border: "1px solid transparent" }
-      }
+      className="tap mx-auto mt-2 flex items-center justify-center rounded-[5px] text-sm font-medium text-white transition-transform active:scale-[0.98]"
+      style={{ background: disabled ? "#C5C5C5" : "var(--color-brand-primary)", width: 150, height: 36, fontSize: 14 }}
     >
       {children}
     </button>
   );
 }
 
+function EyeToggle({ shown, onClick }: { shown: boolean; onClick: () => void }) {
+  return (
+    <button type="button" onClick={onClick} className="shrink-0 text-[var(--color-text-secondary)]">
+      <span className="material-symbols-rounded" style={{ fontSize: 18 }}>
+        {shown ? "visibility" : "visibility_off"}
+      </span>
+    </button>
+  );
+}
+
 export default function LoginPage() {
   const router = useRouter();
-  const { login, findProfileByPhone } = useAuth();
+  const { login, findProfileByPhone, findProfileByIdentifier } = useAuth();
   const { theme } = useTheme();
   const [step, setStep] = useState<Step>("role");
-  const [role, setRole] = useState<(typeof ROLES)[number]["key"] | null>(null);
-  const [phone, setPhone] = useState("");
-  const [otp, setOtp] = useState(["", "", "", "", "", ""]);
+  const [role, setRole] = useState<Role | null>(null);
+
+  const [loginId, setLoginId] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [loginError, setLoginError] = useState("");
+  const [foundProfile, setFoundProfile] = useState<ReturnType<typeof findProfileByIdentifier>>(null);
+
+  const [nickName, setNickName] = useState("");
+  const [mobile, setMobile] = useState("");
+  const [otp, setOtp] = useState("");
   const [seconds, setSeconds] = useState(30);
-  const [name, setName] = useState("");
-  const [gender, setGender] = useState<"male" | "female" | null>(null);
+  const [regNo, setRegNo] = useState("");
+
   const [studentClass, setStudentClass] = useState("");
-  const [division, setDivision] = useState("");
-  const [district, setDistrict] = useState("");
-  const otpRefs = useRef<Array<HTMLInputElement | null>>([]);
+  const [gender, setGender] = useState("");
+  const [religion, setReligion] = useState("");
+  const [branch, setBranch] = useState("");
+  const [email, setEmail] = useState("");
+
+  const [pw1, setPw1] = useState("");
+  const [pw2, setPw2] = useState("");
+  const [showPw1, setShowPw1] = useState(false);
+  const [showPw2, setShowPw2] = useState(false);
+
+  const roleInfo = ROLES.find((r) => r.key === role) ?? ROLES[0];
 
   useEffect(() => {
     if (step !== "otp" || seconds <= 0) return;
@@ -72,21 +180,19 @@ export default function LoginPage() {
     return () => clearTimeout(t);
   }, [step, seconds]);
 
-  const stepOrder = role === "teacher" ? TEACHER_STEP_ORDER : STUDENT_STEP_ORDER;
-  const stepIndex = stepOrder.indexOf(step);
-  const goBack = () => {
-    if (stepIndex <= 0) return;
-    setStep(stepOrder[stepIndex - 1]);
+  const copyRegNo = () => {
+    navigator.clipboard?.writeText(regNo).catch(() => {});
   };
-
-  const districtOptions = DIVISION_DISTRICTS.find((d) => d.name === division)?.districts ?? [];
 
   if (step === "role") {
     return (
-      <div className="relative flex flex-1 flex-col">
+      <div className="relative flex w-full flex-1 flex-col lg:mx-auto lg:max-w-md">
         <div
           className="relative flex flex-col items-center justify-center overflow-hidden px-6 pb-16 pt-16"
-          style={{ background: "linear-gradient(180deg, #9061C8 0%, #55347B 100%)", minHeight: 360 }}
+          style={{
+            background: "linear-gradient(180deg, color-mix(in srgb, var(--color-brand-primary) 72%, white) 0%, var(--color-brand-primary) 100%)",
+            minHeight: 360,
+          }}
         >
           <BackButton href="/" variant="overlay" className="absolute left-4 top-4" />
           <span
@@ -114,18 +220,28 @@ export default function LoginPage() {
                 type="button"
                 onClick={() => {
                   setRole(r.key);
-                  setStep("phone");
+                  setStep("auth");
                 }}
                 className="tap flex items-center gap-3 rounded-[var(--radius-lg)] bg-[var(--color-surface)] px-4 py-4 text-left"
                 style={{ boxShadow: "0 8px 24px rgba(26, 26, 26, 0.06)" }}
               >
                 <span className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-full">
-                  <span className="absolute inset-0 rounded-full" style={{ background: r.bg, opacity: "var(--icon-bg-opacity)" }} />
-                  <span className="material-symbols-rounded relative" style={{ fontSize: 22, color: r.color }}>
+                  <span
+                    className="absolute inset-0 rounded-full"
+                    style={{ background: "var(--color-brand-primary)", opacity: "var(--icon-bg-opacity)" }}
+                  />
+                  <span className="material-symbols-rounded relative" style={{ fontSize: 22, color: "var(--color-brand-primary)" }}>
                     {r.icon}
                   </span>
                 </span>
-                <span className="flex-1 text-[15px] font-semibold text-[var(--color-text-primary)]">{r.label}</span>
+                <span className="flex-1">
+                  <span className="block whitespace-nowrap text-[15px] font-semibold text-[var(--color-text-primary)]">
+                    {r.label}{" "}
+                    <span className="inline-block text-[10px] font-normal" style={{ verticalAlign: "baseline" }}>
+                      ({r.sub})
+                    </span>
+                  </span>
+                </span>
                 <span className="material-symbols-rounded" style={{ fontSize: 16, color: "var(--color-text-secondary)" }}>
                   arrow_forward_ios
                 </span>
@@ -133,330 +249,370 @@ export default function LoginPage() {
             ))}
           </div>
         </div>
+        <BottomNav />
       </div>
     );
   }
 
-  const roleAccentGlow = role === "teacher" ? "rgba(142, 36, 170, 0.45)" : "rgba(159, 28, 46, 0.45)";
-
   return (
     <div
-      className="relative flex flex-1 flex-col"
-      style={role === "teacher" ? ({ "--color-brand-primary": "#8E24AA" } as React.CSSProperties) : undefined}
+      className="relative flex w-full flex-1 flex-col lg:mx-auto lg:max-w-md"
+      style={{
+        background:
+          theme === "light"
+            ? "linear-gradient(160deg, #e2eefd 0%, #e6f3f2 45%, #e9dff2 100%)"
+            : undefined,
+      } as React.CSSProperties}
     >
-      {theme === "light" && <LoginBackground />}
-      <header className="flex items-center gap-3 px-4 py-3">
-        {step !== "success" ? (
-          <BackButton onClick={goBack} />
-        ) : (
-          <span className="h-9 w-9" aria-hidden />
+      <AppHeader />
+      <main className="flex flex-1 flex-col px-2 pb-8">
+        {step === "auth" && (
+          <Card>
+            <CardTitle title={`${roleInfo.label} Login`} sub="How would you like to continue?" />
+            <div className="mt-2 flex flex-col items-center gap-3">
+              <button
+                type="button"
+                onClick={() => setStep("loginId")}
+                className="tap w-full max-w-[220px] rounded-[5px] py-2.5 text-sm font-medium text-white"
+                style={{ background: "var(--color-brand-primary)" }}
+              >
+                Login
+              </button>
+              <button
+                type="button"
+                onClick={() => setStep("basicInfo")}
+                className="tap w-full max-w-[220px] rounded-[5px] border py-2.5 text-sm font-medium"
+                style={{ borderColor: "var(--color-brand-primary)", color: "var(--color-brand-primary)" }}
+              >
+                New Registration
+              </button>
+            </div>
+          </Card>
         )}
-      </header>
 
-      <main className="flex flex-1 flex-col px-6 pb-8">
-        {step === "phone" && (
-          <div className="flex flex-1 flex-col justify-center">
-            <div className="mb-5 flex flex-col items-center gap-1 text-center -translate-y-2">
-              <Image
-                src={theme === "dark" ? "/logo-stacked-dark-v3.png" : "/logo-stacked.png"}
-                alt="উদ্ভাস-উন্মেষ Online Care"
-                width={216}
-                height={theme === "dark" ? 220 : 220}
-                className="h-[94px] w-auto"
-              />
-            </div>
-            <p className="mb-2 mt-8 text-sm font-semibold text-[var(--color-text-primary)]">
-              {role === "teacher" ? "শিক্ষকের মোবাইল নম্বর" : "শিক্ষার্থীর মোবাইল নম্বর"}
-            </p>
-            <div
-              className="mb-4 flex items-center gap-2 rounded-[5px] border-2 border-transparent px-4 py-3.5 transition-colors duration-150 ease-out has-[:focus-visible]:border-[var(--color-brand-primary)]"
-              style={{ background: "color-mix(in srgb, var(--color-border) 55%, var(--color-surface))" }}
-            >
-              <span className="text-sm font-semibold text-[var(--color-text-primary)]">+88</span>
-              <span className="h-4 w-px bg-[var(--color-border)]" />
-              <input
-                value={phone}
-                onChange={(e) => setPhone(e.target.value.replace(/\D/g, "").slice(0, 10))}
-                placeholder="01XXXXXXXXXX"
-                inputMode="numeric"
-                className="flex-1 bg-transparent text-sm text-[var(--color-text-primary)] outline-none placeholder:text-[var(--color-text-secondary)]"
-              />
-            </div>
-            <button
-              type="button"
-              disabled={phone.length !== 10}
-              onClick={() => setStep("otp")}
-              className="w-full rounded-[5px] py-3.5 text-sm font-bold transition-[transform,background-color,color,border-color] duration-200 ease-out active:scale-[0.98]"
-              style={
-                phone.length === 10
-                  ? { background: "var(--color-brand-primary)", color: "white", boxShadow: `0 8px 20px ${roleAccentGlow}`, border: "1px solid transparent" }
-                  : {
-                      background: "color-mix(in srgb, var(--color-brand-primary) 18%, var(--color-surface))",
-                      color: "var(--color-brand-primary)",
-                      border: "1px solid color-mix(in srgb, var(--color-brand-primary) 25%, transparent)",
-                    }
-              }
+        {step === "loginId" && (
+          <Card>
+            <CardTitle title={`${roleInfo.label} Login`} sub="Enter registration number or mobile" />
+            <FieldLabel>Registration No. / Mobile</FieldLabel>
+            <TextField value={loginId} onChange={setLoginId} placeholder="e.g. 1234567 or 01XXXXXXXXX" />
+            <CardButton
+              disabled={!loginId}
+              onClick={() => {
+                const existing = findProfileByIdentifier(loginId);
+                setFoundProfile(existing);
+                setStep("loginPassword");
+              }}
             >
               Next
-            </button>
-            <p className="text-center text-xs text-[var(--color-text-secondary)]" style={{ marginTop: 18 }}>
-              Don&apos;t have an account? <span className="font-semibold text-[var(--color-brand-primary)]">Register</span>
-            </p>
-          </div>
-        )}
-
-        {step === "otp" && (
-          <div className="flex flex-1 flex-col justify-center">
-            <h1 className="mb-1 text-lg font-bold text-[var(--color-text-primary)]">ভেরিফিকেশন কোড</h1>
-            <p className="mb-5 text-sm text-[var(--color-text-secondary)]">
-              আমরা +৮৮ {phone || "01XXXXXXXX"} নম্বরে একটি কোড পাঠিয়েছি
-            </p>
-            <div className="mb-4 grid grid-cols-6 gap-2">
-              {otp.map((digit, i) => (
-                <input
-                  key={i}
-                  ref={(el) => {
-                    otpRefs.current[i] = el;
-                  }}
-                  value={digit}
-                  onChange={(e) => {
-                    const digits = e.target.value.replace(/\D/g, "");
-                    if (!digits) {
-                      setOtp((prev) => {
-                        const next = [...prev];
-                        next[i] = "";
-                        return next;
-                      });
-                      return;
-                    }
-                    setOtp((prev) => {
-                      const next = [...prev];
-                      let idx = i;
-                      for (const d of digits) {
-                        if (idx > 5) break;
-                        next[idx] = d;
-                        idx++;
-                      }
-                      return next;
-                    });
-                    const lastFilled = Math.min(i + digits.length, 6) - 1;
-                    if (lastFilled < 5) otpRefs.current[lastFilled + 1]?.focus();
-                    else otpRefs.current[5]?.blur();
-                  }}
-                  onPaste={(e) => {
-                    const pasted = e.clipboardData.getData("text").replace(/\D/g, "").slice(0, 6);
-                    if (!pasted) return;
-                    e.preventDefault();
-                    setOtp((prev) => {
-                      const next = [...prev];
-                      for (let k = 0; k < pasted.length; k++) next[k] = pasted[k];
-                      return next;
-                    });
-                    otpRefs.current[Math.min(pasted.length, 6) - 1]?.focus();
-                  }}
-                  onKeyDown={(e) => {
-                    if (e.key === "Backspace" && !otp[i] && i > 0) otpRefs.current[i - 1]?.focus();
-                  }}
-                  inputMode="numeric"
-                  maxLength={6}
-                  className="aspect-square w-full min-w-0 rounded-[5px] border border-[var(--color-border)] text-center text-base font-bold text-[var(--color-text-primary)] outline-none transition-colors duration-150 ease-out focus:border-[var(--color-brand-primary)]"
-                />
-              ))}
-            </div>
-            <p className="mb-6 text-xs text-[var(--color-text-secondary)]">
-              {seconds > 0 ? (
-                <>Resend code ({String(Math.floor(seconds / 60)).padStart(2, "0")}:{String(seconds % 60).padStart(2, "0")})</>
-              ) : (
-                <button type="button" onClick={() => setSeconds(30)} className="font-semibold text-[var(--color-brand-primary)]">
-                  Resend code
-                </button>
-              )}
-              {" · "}
-              <button type="button" onClick={() => setStep("phone")} className="font-semibold text-[var(--color-brand-primary)]">
-                Wrong number?
+            </CardButton>
+            <p className="mt-4 text-center text-xs text-[var(--color-text-secondary)]">
+              Don&apos;t have an account?{" "}
+              <button type="button" onClick={() => setStep("basicInfo")} className="font-semibold" style={{ color: "var(--color-brand-primary)" }}>
+                Register
               </button>
             </p>
-            <PrimaryButton
-              disabled={otp.some((d) => !d)}
+          </Card>
+        )}
+
+        {step === "loginPassword" && (
+          <Card>
+            <CardTitle title={`Welcome, ${foundProfile?.name ?? "back"}!`} sub="Enter your password to continue" />
+            <FieldLabel>Password</FieldLabel>
+            <TextField
+              value={password}
+              onChange={setPassword}
+              placeholder="Enter your password"
+              type={showPassword ? "text" : "password"}
+              rightIcon={<EyeToggle shown={showPassword} onClick={() => setShowPassword((v) => !v)} />}
+            />
+            <p className="-mt-2 mb-2 text-xs font-semibold" style={{ color: "var(--color-error)" }}>
+              পাসওয়ার্ড ভুলে গেছেন?
+            </p>
+            {loginError && (
+              <p className="mb-2 text-xs font-semibold" style={{ color: "var(--color-error)" }}>
+                {loginError}
+              </p>
+            )}
+            <CardButton
+              disabled={!password}
               onClick={() => {
-                const existing = findProfileByPhone(phone);
-                if (existing) {
-                  login(existing);
+                if (foundProfile && foundProfile.role === role && (!foundProfile.password || foundProfile.password === password)) {
+                  login(foundProfile);
                   router.push("/");
                   return;
                 }
-                setStep("name");
+                setLoginError("That registration number/mobile or password doesn't match.");
               }}
             >
-              Next
-            </PrimaryButton>
-          </div>
+              Login
+            </CardButton>
+          </Card>
         )}
 
-        {step === "name" && (
-          <div className="flex flex-1 flex-col justify-center">
-            <h1 className="mb-4 text-center text-lg font-bold text-[var(--color-text-primary)]">
-              {role === "teacher" ? "আপনার নাম কী?" : "তোমার নাম কী?"}
-            </h1>
-            <input
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder={role === "teacher" ? "আপনার পূর্ণ নাম লিখুন" : "তোমার পূর্ণ নাম লিখো"}
-              className="mb-6 w-full rounded-[10px] border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2.5 text-sm text-[var(--color-text-primary)] outline-none transition-colors duration-150 ease-out placeholder:text-[var(--color-text-secondary)] focus:border-[var(--color-brand-primary)]"
+        {step === "basicInfo" && (
+          <Card>
+            <CardTitle title="Registration Form" sub="It's Simple & Easy" />
+            <FieldLabel>Nick Name</FieldLabel>
+            <TextField value={nickName} onChange={setNickName} placeholder="Enter Your Nick Name" />
+            <FieldLabel>Mobile Number</FieldLabel>
+            <TextField
+              value={mobile}
+              onChange={(v) => setMobile(v.replace(/\D/g, "").slice(0, 11))}
+              placeholder="Enter Your Mobile Number"
+              inputMode="numeric"
             />
-            <PrimaryButton disabled={name.trim().length === 0} onClick={() => setStep("gender")}>
-              পরবর্তী
-            </PrimaryButton>
-          </div>
-        )}
-
-        {step === "gender" && (
-          <div className="flex flex-1 flex-col justify-center">
-            <h1 className="mb-5 text-center text-lg font-bold text-[var(--color-text-primary)]">
-              {role === "teacher" ? "আপনার Gender নির্বাচন করুন" : "তোমার Gender বেছে নাও"}
-            </h1>
-            <div className="mb-6 flex gap-3">
-              {(
-                [
-                  { key: "male", label: "ছেলে", bg: "#E3F0FD", color: "var(--color-info)", icon: "man" },
-                  { key: "female", label: "মেয়ে", bg: "#FDE8E4", color: "var(--color-brand-primary)", icon: "woman" },
-                ] as const
-              ).map((g) => {
-                const active = gender === g.key;
-                return (
-                  <button
-                    key={g.key}
-                    type="button"
-                    onClick={() => setGender(g.key)}
-                    className="relative flex flex-1 flex-col items-center gap-2.5 rounded-[var(--radius-lg)] border-2 py-6 transition-all"
-                    style={{
-                      borderColor: active ? "var(--color-brand-primary)" : "var(--color-border)",
-                      background: "var(--color-surface)",
-                      boxShadow: active ? "var(--shadow-medium)" : "none",
-                    }}
-                  >
-                    {active && (
-                      <span
-                        className="absolute right-2.5 top-2.5 flex h-5 w-5 items-center justify-center rounded-full text-white"
-                        style={{ background: "var(--color-brand-primary)" }}
-                      >
-                        <span className="material-symbols-rounded" style={{ fontSize: 13 }}>
-                          check
-                        </span>
-                      </span>
-                    )}
-                    <span className="relative flex h-14 w-14 items-center justify-center rounded-full">
-                      <span className="absolute inset-0 rounded-full" style={{ background: g.bg, opacity: "var(--icon-bg-opacity)" }} />
-                      <span className="material-symbols-rounded relative" style={{ fontSize: 30, color: g.color }}>
-                        {g.icon}
-                      </span>
-                    </span>
-                    <span className="text-sm font-semibold text-[var(--color-text-primary)]">{g.label}</span>
-                  </button>
-                );
-              })}
-            </div>
-            <PrimaryButton disabled={!gender} onClick={() => setStep(role === "teacher" ? "location" : "class")}>
-              পরবর্তী
-            </PrimaryButton>
-          </div>
-        )}
-
-        {step === "class" && (
-          <div className="flex flex-1 flex-col justify-center">
-            <h1 className="mb-4 text-center text-lg font-bold text-[var(--color-text-primary)]">তোমার ক্লাস নির্বাচন করো</h1>
-            <select
-              value={studentClass}
-              onChange={(e) => setStudentClass(e.target.value)}
-              className="mb-6 w-full rounded-[10px] border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2.5 text-sm text-[var(--color-text-primary)] outline-none transition-colors duration-150 ease-out focus:border-[var(--color-brand-primary)]"
-            >
-              <option value="">শ্রেণি নির্বাচন করুন</option>
-              {CLASSES.map((c) => (
-                <option key={c} value={c}>
-                  {c}
-                </option>
-              ))}
-            </select>
-            <PrimaryButton disabled={!studentClass} onClick={() => setStep("location")}>
-              পরবর্তী
-            </PrimaryButton>
-          </div>
-        )}
-
-        {step === "location" && (
-          <div className="flex flex-1 flex-col justify-center">
-            <h1 className="mb-4 text-center text-lg font-bold text-[var(--color-text-primary)]">
-              {role === "teacher" ? "আপনার বর্তমান অবস্থান নির্বাচন করুন" : "তোমার বর্তমান অবস্থান নির্বাচন করো"}
-            </h1>
-            <select
-              value={division}
-              onChange={(e) => {
-                setDivision(e.target.value);
-                setDistrict("");
+            <CardButton
+              disabled={!nickName.trim() || mobile.length < 10}
+              onClick={() => {
+                const existing = findProfileByPhone(mobile);
+                if (existing) {
+                  setFoundProfile(existing);
+                  setStep("alreadyRegistered");
+                  return;
+                }
+                setStep("otp");
               }}
-              className="mb-3 w-full rounded-[10px] border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2.5 text-sm text-[var(--color-text-primary)] outline-none transition-colors duration-150 ease-out focus:border-[var(--color-brand-primary)]"
             >
-              <option value="">বিভাগ নির্বাচন করুন</option>
-              {DIVISION_DISTRICTS.map((d) => (
-                <option key={d.slug} value={d.name}>
-                  {d.name}
-                </option>
-              ))}
-            </select>
-            <select
-              value={district}
-              onChange={(e) => setDistrict(e.target.value)}
-              disabled={!division}
-              className="mb-6 w-full rounded-[10px] border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2.5 text-sm text-[var(--color-text-primary)] outline-none transition-colors duration-150 ease-out focus:border-[var(--color-brand-primary)] disabled:opacity-50"
-            >
-              <option value="">জেলা নির্বাচন করুন</option>
-              {districtOptions.map((d) => (
-                <option key={d} value={d}>
-                  {d}
-                </option>
-              ))}
-            </select>
-            <PrimaryButton disabled={!district} onClick={() => setStep("success")}>
               Next
-            </PrimaryButton>
-          </div>
+            </CardButton>
+            <p className="mt-4 text-center text-xs text-[var(--color-text-secondary)]">
+              Already have an account?{" "}
+              <button type="button" onClick={() => setStep("loginId")} className="font-semibold" style={{ color: "var(--color-brand-primary)" }}>
+                Login
+              </button>
+            </p>
+          </Card>
+        )}
+
+        {step === "otp" && (
+          <Card>
+            <CardTitle title="Registration Form" sub="It's Simple & Easy" />
+            <p
+              className="mb-4 rounded-[8px] px-3 py-2 text-center text-xs font-semibold"
+              style={{ background: "color-mix(in srgb, var(--color-error) 10%, transparent)", color: "var(--color-error)" }}
+            >
+              We sent a code to {mobile.slice(0, 5)}*****{mobile.slice(-3)}
+            </p>
+            <FieldLabel>OTP</FieldLabel>
+            <TextField value={otp} onChange={(v) => setOtp(v.replace(/\D/g, "").slice(0, 6))} placeholder="Enter the OTP" inputMode="numeric" />
+            <p className="mb-4 text-center text-xs text-[var(--color-text-secondary)]">
+              {seconds > 0 ? (
+                <>
+                  Resend OTP in <span className="font-semibold text-[var(--color-text-primary)]">{String(Math.floor(seconds / 60)).padStart(2, "0")}:{String(seconds % 60).padStart(2, "0")}</span>
+                </>
+              ) : (
+                <>
+                  Didn&apos;t get OTP yet?{" "}
+                  <button type="button" onClick={() => setSeconds(30)} className="font-semibold" style={{ color: "#2196F3" }}>
+                    Resend OTP
+                  </button>
+                </>
+              )}
+            </p>
+            <CardButton
+              disabled={otp.length < 4}
+              onClick={() => {
+                setRegNo(generateRegNo());
+                setStep("personalDetails");
+              }}
+            >
+              Next
+            </CardButton>
+          </Card>
+        )}
+
+        {step === "alreadyRegistered" && (
+          <Card>
+            <CardTitle title="Already Registered!" sub="" />
+            <div className="-mt-3 text-center">
+              <p className="text-sm text-[var(--color-text-secondary)]">
+                Dear <span className="font-semibold text-[var(--color-text-primary)]">{foundProfile?.name}</span>,
+              </p>
+              <p className="mt-1 text-sm text-[var(--color-text-secondary)]">You are already registered.</p>
+              {foundProfile?.registrationNo && (
+                <p className="mt-1 text-sm text-[var(--color-text-secondary)]">
+                  Your registration number is{" "}
+                  <span className="font-bold" style={{ color: "var(--color-brand-primary)" }}>
+                    {foundProfile.registrationNo}
+                  </span>
+                </p>
+              )}
+            </div>
+            <CardButton
+              onClick={() => {
+                setLoginId(foundProfile?.registrationNo || foundProfile?.phone || "");
+                setStep("loginId");
+              }}
+            >
+              Login
+            </CardButton>
+          </Card>
+        )}
+
+        {step === "personalDetails" && (
+          <Card>
+            <CardTitle title="Registration Form" sub="Almost Done!" />
+            {role === "student" && (
+              <>
+                <FieldLabel>Grade/Level</FieldLabel>
+                <SelectField value={studentClass} onChange={setStudentClass} placeholder="Select Grade or Level">
+                  {CLASSES.map((c) => (
+                    <option key={c} value={c}>
+                      {c}
+                    </option>
+                  ))}
+                </SelectField>
+              </>
+            )}
+            <FieldLabel>Gender</FieldLabel>
+            <SelectField value={gender} onChange={setGender} placeholder="Select Gender">
+              <option value="male">ছেলে</option>
+              <option value="female">মেয়ে</option>
+            </SelectField>
+            <FieldLabel>Religion</FieldLabel>
+            <SelectField value={religion} onChange={setReligion} placeholder="Select Religion">
+              {RELIGIONS.map((r) => (
+                <option key={r} value={r}>
+                  {r}
+                </option>
+              ))}
+            </SelectField>
+            <FieldLabel>Nearest Branch</FieldLabel>
+            <SelectField value={branch} onChange={setBranch} placeholder="Select your nearest branch">
+              {DIVISIONS.map((d) => (
+                <optgroup key={d.slug} label={d.name}>
+                  {d.branches.map((b) => (
+                    <option key={b.name} value={b.name}>
+                      {b.name}
+                    </option>
+                  ))}
+                </optgroup>
+              ))}
+            </SelectField>
+            <FieldLabel>Email Address (Optional)</FieldLabel>
+            <TextField value={email} onChange={setEmail} placeholder="you@example.com" type="email" />
+            <CardButton
+              disabled={!gender || !branch || (role === "student" && !studentClass)}
+              onClick={() => setStep("setPassword")}
+            >
+              Submit
+            </CardButton>
+          </Card>
+        )}
+
+        {step === "setPassword" && (
+          <Card>
+            <CardTitle title="Set Your Password" sub="" />
+            <div className="-mt-3 mb-4 text-center text-sm text-[var(--color-text-secondary)]">
+              <p>
+                Dear <span className="font-semibold text-[var(--color-text-primary)]">{nickName}</span>,
+              </p>
+              <p className="mt-1 flex items-center justify-center gap-1.5">
+                Your registration number is{" "}
+                <span className="font-bold" style={{ color: "var(--color-brand-primary)" }}>
+                  {regNo}
+                </span>
+                <button type="button" onClick={copyRegNo} className="text-[var(--color-text-secondary)]">
+                  <span className="material-symbols-rounded" style={{ fontSize: 15 }}>
+                    content_copy
+                  </span>
+                </button>
+              </p>
+            </div>
+            <FieldLabel>Enter Password</FieldLabel>
+            <TextField
+              value={pw1}
+              onChange={setPw1}
+              placeholder="Enter Password"
+              type={showPw1 ? "text" : "password"}
+              rightIcon={<EyeToggle shown={showPw1} onClick={() => setShowPw1((v) => !v)} />}
+            />
+            <FieldLabel>Confirm Password</FieldLabel>
+            <TextField
+              value={pw2}
+              onChange={setPw2}
+              placeholder="Confirm Password"
+              type={showPw2 ? "text" : "password"}
+              rightIcon={<EyeToggle shown={showPw2} onClick={() => setShowPw2((v) => !v)} />}
+            />
+            <p className="mb-1.5 text-xs font-semibold text-[var(--color-text-primary)]">
+              Make sure your password is strong and secure.
+            </p>
+            <ul className="mb-4 flex flex-col gap-1 text-xs text-[var(--color-text-secondary)]">
+              <li className="flex items-center gap-2">
+                <span className="material-symbols-rounded" style={{ fontSize: 15, color: pw1.length >= 8 ? "var(--color-success)" : undefined }}>
+                  {pw1.length >= 8 ? "check_circle" : "radio_button_unchecked"}
+                </span>
+                At least 8 characters long
+              </li>
+              <li className="flex items-center gap-2">
+                <span className="material-symbols-rounded" style={{ fontSize: 15, color: /[a-zA-Z]/.test(pw1) ? "var(--color-success)" : undefined }}>
+                  {/[a-zA-Z]/.test(pw1) ? "check_circle" : "radio_button_unchecked"}
+                </span>
+                Must include a letter
+              </li>
+              <li className="flex items-center gap-2">
+                <span className="material-symbols-rounded" style={{ fontSize: 15, color: /[0-9]/.test(pw1) ? "var(--color-success)" : undefined }}>
+                  {/[0-9]/.test(pw1) ? "check_circle" : "radio_button_unchecked"}
+                </span>
+                Must include a number
+              </li>
+              <li className="flex items-center gap-2">
+                <span className="material-symbols-rounded" style={{ fontSize: 15, color: /[^a-zA-Z0-9]/.test(pw1) ? "var(--color-success)" : undefined }}>
+                  {/[^a-zA-Z0-9]/.test(pw1) ? "check_circle" : "radio_button_unchecked"}
+                </span>
+                Must include a special character
+              </li>
+            </ul>
+            <CardButton disabled={!pw1 || pw1 !== pw2} onClick={() => setStep("success")}>
+              Submit
+            </CardButton>
+          </Card>
         )}
 
         {step === "success" && (
-          <div className="flex flex-1 flex-col items-center justify-center text-center">
-            <span
-              className="mb-5 flex h-16 w-16 items-center justify-center rounded-full"
-              style={{ background: "var(--color-success)" }}
-            >
-              <span className="material-symbols-rounded" style={{ fontSize: 34, color: "white" }}>
-                check
-              </span>
-            </span>
-            <h1 className="mb-2 text-xl font-bold text-[var(--color-text-primary)]">All done!</h1>
-            <p className="mb-8 max-w-[28ch] text-sm text-[var(--color-text-secondary)]">
-              You can now start using Udvash-Unmesh's services.
-            </p>
-            <div className="w-full">
-              <PrimaryButton
-                onClick={() => {
-                  login({
-                    name,
-                    phone,
-                    role: role ?? "student",
-                    gender: gender ?? undefined,
-                    studentClass,
-                    division,
-                    district,
-                  });
-                  router.push("/");
-                }}
-              >
-                Let's get started
-              </PrimaryButton>
+          <Card>
+            <CardTitle title="Congratulations!" sub="" />
+            <div className="-mt-3 mb-4 text-center text-sm text-[var(--color-text-secondary)]">
+              <p>
+                Dear <span className="font-semibold text-[var(--color-text-primary)]">{nickName}</span>,
+              </p>
+              <p className="mt-1">Your registration is complete.</p>
+              <p className="mt-1 flex items-center justify-center gap-1.5">
+                Your registration number is{" "}
+                <span className="font-bold" style={{ color: "var(--color-brand-primary)" }}>
+                  {regNo}
+                </span>
+                <button type="button" onClick={copyRegNo} className="text-[var(--color-text-secondary)]">
+                  <span className="material-symbols-rounded" style={{ fontSize: 15 }}>
+                    content_copy
+                  </span>
+                </button>
+              </p>
             </div>
-          </div>
+            <CardButton
+              onClick={() => {
+                login({
+                  name: nickName,
+                  phone: mobile,
+                  role: role ?? "student",
+                  gender,
+                  religion,
+                  email: email || undefined,
+                  studentClass: role === "student" ? studentClass : undefined,
+                  branch,
+                  registrationNo: regNo,
+                  password: pw1,
+                });
+                router.push("/programs");
+              }}
+            >
+              Add Course
+            </CardButton>
+          </Card>
         )}
       </main>
+      <BottomNav />
     </div>
   );
 }
