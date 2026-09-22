@@ -5,6 +5,10 @@ import { useRouter } from "next/navigation";
 
 const PULL_THRESHOLD = 64;
 const MAX_PULL = 88;
+// Below this, treat the pull as 0. On some mobile browsers a stray touchmove
+// (e.g. from the browser's own overscroll/refresh gesture) can leave `pull`
+// stuck at a tiny non-zero value, showing a persistent sliver of the icon.
+const PULL_DEAD_ZONE = 6;
 
 export default function PullToRefresh({ children }: { children: React.ReactNode }) {
   const router = useRouter();
@@ -45,7 +49,8 @@ export default function PullToRefresh({ children }: { children: React.ReactNode 
       setPull(0);
       return;
     }
-    setPull(Math.min(delta * 0.5, MAX_PULL));
+    const next = Math.min(delta * 0.5, MAX_PULL);
+    setPull(next < PULL_DEAD_ZONE ? 0 : next);
   };
 
   const handleTouchEnd = () => {
@@ -67,13 +72,17 @@ export default function PullToRefresh({ children }: { children: React.ReactNode 
     }
   };
 
+  // Belt-and-suspenders against the stuck-sliver glitch: never show anything
+  // for a pull this small, no matter how `pull` state got there.
+  const visualPull = !refreshing && pull < PULL_DEAD_ZONE ? 0 : pull;
+
   return (
     <div onTouchStart={handleTouchStart} onTouchMove={handleTouchMove} onTouchEnd={handleTouchEnd} className="flex flex-1 flex-col">
       <div
         aria-hidden
         className="flex items-center justify-center overflow-hidden"
         style={{
-          height: pull,
+          height: visualPull,
           transition: isDragging ? "none" : "height 200ms ease-out",
         }}
       >
@@ -82,8 +91,8 @@ export default function PullToRefresh({ children }: { children: React.ReactNode 
           style={{
             fontSize: 20,
             color: "var(--color-brand-primary)",
-            opacity: Math.min(pull / PULL_THRESHOLD, 1),
-            transform: refreshing ? undefined : `rotate(${(pull / PULL_THRESHOLD) * 360}deg)`,
+            opacity: Math.min(visualPull / PULL_THRESHOLD, 1),
+            transform: refreshing ? undefined : `rotate(${(visualPull / PULL_THRESHOLD) * 360}deg)`,
           }}
         >
           refresh
