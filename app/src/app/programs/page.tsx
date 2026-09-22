@@ -41,7 +41,7 @@ export default function ProgramsPage() {
     <>
       <AppHeader />
       <header className="relative mb-2 flex items-center justify-center gap-3 px-4 py-3">
-        <span className="absolute left-4"><BackButton href="/" /></span>
+        <span className="absolute left-4 lg:left-8"><BackButton href="/" /></span>
         <h1 className="font-heading text-[18px] font-semibold leading-none text-[#616161]">প্রোগ্রামসমূহ</h1>
       </header>
 
@@ -193,7 +193,7 @@ export default function ProgramsPage() {
           />
         </div>
 
-        <div className="mt-4 flex flex-col gap-4">
+        <div className="mt-4 flex flex-col gap-4 lg:grid lg:grid-cols-2">
           {filtered.map((program) => (
             <div
               key={program.id}

@@ -37,7 +37,7 @@ export default function CommunityPage() {
           />
         </div>
 
-        <div className="mt-4 flex flex-col gap-3">
+        <div className="mt-4 flex flex-col gap-3 lg:grid lg:grid-cols-2">
           {filtered.map((g) => (
             <button
               key={g.name}

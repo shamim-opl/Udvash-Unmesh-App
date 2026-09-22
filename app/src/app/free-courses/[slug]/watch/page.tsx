@@ -162,7 +162,7 @@ export default function WatchCoursePage() {
     <>
       <AppHeader />
       <header className="relative mb-2 flex items-center justify-center gap-3 px-4 py-3">
-        <span className="absolute left-4"><BackButton href={`/free-courses/${slug}`} /></span>
+        <span className="absolute left-4 lg:left-8"><BackButton href={`/free-courses/${slug}`} /></span>
         <h1 className="font-heading truncate text-[18px] font-semibold leading-none text-[#616161]">{course.title}</h1>
       </header>
 

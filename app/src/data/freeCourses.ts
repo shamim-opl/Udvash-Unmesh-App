@@ -7,14 +7,14 @@ export type ClassLevel = {
 };
 
 export const CLASS_LEVELS: ClassLevel[] = [
-  { slug: "class-5", number: "৫", label: "ক্লাস ৫", bg: "#FDE1E4", color: "#E53935" },
+  { slug: "class-5", number: "৫", label: "ক্লাস ৫", bg: "#DDF4F8", color: "#00ACC1" },
   { slug: "class-6", number: "৬", label: "ক্লাস ৬", bg: "#E3F0FD", color: "#1E88E5" },
   { slug: "class-7", number: "৭", label: "ক্লাস ৭", bg: "#E3F7EA", color: "#43A047" },
   { slug: "class-8", number: "৮", label: "ক্লাস ৮", bg: "#FEEBDD", color: "#FB8C00" },
   { slug: "class-9", number: "৯", label: "ক্লাস ৯", bg: "#E0F5F4", color: "#00897B" },
   { slug: "class-10", number: "১০", label: "ক্লাস ১০", bg: "#F0E5FB", color: "#8E24AA" },
   { slug: "class-11", number: "১১", label: "ক্লাস ১১", bg: "#E8EAFB", color: "#3949AB" },
-  { slug: "class-12", number: "১২", label: "ক্লাস ১২", bg: "#FCE4EC", color: "#D81B60" },
+  { slug: "class-12", number: "১২", label: "ক্লাস ১২", bg: "#EFE6E2", color: "#8D6E63" },
 ];
 
 export type Lesson = {

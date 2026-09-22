@@ -18,7 +18,7 @@ export default function DownloadsPage() {
       </header>
 
       <main className="flex-1 px-4 pb-6">
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-3 lg:grid lg:grid-cols-2">
           {DOWNLOADS.map((item) => (
             <button
               key={item.id}

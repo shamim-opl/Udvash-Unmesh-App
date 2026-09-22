@@ -38,7 +38,7 @@ export default function QAPage() {
           />
         </div>
 
-        <div className="mt-4 flex flex-col gap-3">
+        <div className="mt-4 flex flex-col gap-3 lg:grid lg:grid-cols-2">
           {filtered.map((t) => (
             <button
               key={t.subject}

@@ -14,7 +14,7 @@
   --color-error: #D32F2F;
   --color-info: #0288D1;
 
-  --font-heading: var(--font-inter), system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-heading: var(--font-inter), var(--font-hind-siliguri), "Hind Siliguri", system-ui, sans-serif;
   --type-h1: 32px;
   --type-h1-mobile: 24px;
   --type-h2: 24px;
@@ -245,5 +245,23 @@ select {
   }
   .tap:active {
     transform: none;
+  }
+}
+
+/* Desktop: header spans the full column; page body keeps side space.
+   Inner content already has 16px padding, so margin = target - 16px. */
+@media (min-width: 1024px) {
+  main {
+    margin-inline: 32px;
+  }
+}
+@media (min-width: 1280px) {
+  main {
+    margin-inline: 104px;
+  }
+}
+@media (min-width: 1536px) {
+  main {
+    margin-inline: 184px;
   }
 }

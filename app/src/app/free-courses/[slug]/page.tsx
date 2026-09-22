@@ -44,7 +44,7 @@ export default function FreeCoursesClassPage() {
       <>
         <AppHeader />
         <header className="relative mb-2 flex items-center justify-center gap-3 px-4 py-3">
-          <span className="absolute left-4"><BackButton href="/free-courses" /></span>
+          <span className="absolute left-4 lg:left-8"><BackButton href="/free-courses" /></span>
           <h1 className="font-heading text-[18px] font-semibold leading-none text-[#616161]">ট্রায়াল / ফ্রি কোর্স</h1>
         </header>
         <main className="flex flex-1 items-center justify-center px-8 text-center">
@@ -58,7 +58,7 @@ export default function FreeCoursesClassPage() {
   return (
     <>
       <header className="relative mb-2 flex items-center justify-center gap-3 px-4 py-3">
-        <span className="absolute left-4"><BackButton href="/free-courses" /></span>
+        <span className="absolute left-4 lg:left-8"><BackButton href="/free-courses" /></span>
         <h1 className="font-heading text-[18px] font-semibold leading-none text-[#616161]">{classLevel.label}</h1>
       </header>
 

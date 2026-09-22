@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Hind_Siliguri, Inter } from "next/font/google";
 import ThemeProvider from "@/components/ThemeProvider";
 import AuthProvider from "@/components/AuthProvider";
 import PageTransition from "@/components/PageTransition";
@@ -12,6 +12,12 @@ const inter = Inter({
   weight: ["400", "500", "600", "700"],
 });
 
+const hindSiliguri = Hind_Siliguri({
+  variable: "--font-hind-siliguri",
+  subsets: ["bengali", "latin"],
+  weight: ["400", "500", "600", "700"],
+});
+
 export const metadata: Metadata = {
   title: "Udvash-Unmesh",
   description: "শিক্ষার পথে, আগামীর জন্য",
@@ -19,7 +25,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="bn" data-brand="udvash" className={`${inter.variable} h-full antialiased`}>
+    <html lang="bn" data-brand="udvash" className={`${inter.variable} ${hindSiliguri.variable} h-full antialiased`}>
       <head>
         <link
           rel="stylesheet"
@@ -30,7 +36,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <ThemeProvider>
           <AuthProvider>
             <Sidebar />
-            <div className="mx-auto flex w-full max-w-md flex-1 flex-col lg:max-w-3xl bg-[var(--color-bg-canvas)]">
+            <div className="mx-auto flex w-full max-w-md flex-1 flex-col md:max-w-3xl lg:max-w-none bg-[var(--color-bg-canvas)]">
               <PageTransition>{children}</PageTransition>
             </div>
           </AuthProvider>

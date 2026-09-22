@@ -10,8 +10,8 @@ import { AvatarIcon } from "@/components/nav-icons";
 
 export default function Sidebar() {
   const pathname = usePathname();
-  const { theme } = useTheme();
   const { isLoggedIn } = useAuth();
+  const { theme } = useTheme();
   const accountHref = isLoggedIn ? "/profile" : "/login";
   const accountActive = pathname === accountHref;
 
@@ -20,7 +20,7 @@ export default function Sidebar() {
       className="sticky top-0 hidden h-screen w-64 shrink-0 flex-col border-r px-4 py-6 lg:flex"
       style={{ borderColor: "var(--color-border)" }}
     >
-      <div className="mb-8 flex items-center gap-2.5 px-2">
+      <Link href="/" className="tap mb-8 flex items-center gap-2.5 px-2">
         <Image
           src={theme === "dark" ? "/logo-dark.png" : "/logo.png"}
           alt="উদ্ভাস-উন্মেষ Online Care"
@@ -28,7 +28,7 @@ export default function Sidebar() {
           height={theme === "dark" ? 30 : 39}
           className="h-8 w-auto"
         />
-      </div>
+      </Link>
 
       <nav className="flex flex-col gap-1">
         {NAV_ITEMS.map((item) => {

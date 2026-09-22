@@ -186,7 +186,7 @@ export default function LoginPage() {
 
   if (step === "role") {
     return (
-      <div className="relative flex w-full flex-1 flex-col lg:mx-auto lg:max-w-md">
+      <div className="relative flex w-full flex-1 flex-col lg:max-w-none">
         <div
           className="relative flex flex-col items-center justify-center overflow-hidden px-6 pb-16 pt-16"
           style={{
@@ -209,11 +209,11 @@ export default function LoginPage() {
           />
         </div>
 
-        <div className="relative -mt-6 flex flex-1 flex-col rounded-t-[28px] bg-[var(--color-bg-canvas)] px-6 pt-6">
-          <h1 className="mb-4 text-[20px] font-semibold text-[var(--color-text-primary)]">
+        <div className="relative flex w-full flex-1 flex-col bg-[var(--color-bg-canvas)] px-6 pt-6 md:mx-auto md:max-w-2xl">
+          <h1 className="mb-4 text-[20px] font-semibold text-[var(--color-text-primary)] md:text-center">
             আপনার ভূমিকা নির্বাচন করুন?
           </h1>
-          <div className="flex flex-col gap-3">
+          <div className="flex flex-col gap-3 md:grid md:grid-cols-3">
             {ROLES.map((r) => (
               <button
                 key={r.key}
@@ -222,10 +222,10 @@ export default function LoginPage() {
                   setRole(r.key);
                   setStep("auth");
                 }}
-                className="tap flex items-center gap-3 rounded-[var(--radius-lg)] bg-[var(--color-surface)] px-4 py-4 text-left"
+                className="tap flex items-center gap-3 rounded-[var(--radius-lg)] bg-[var(--color-surface)] px-4 py-4 text-left md:flex-col md:justify-center md:gap-3 md:px-3 md:py-7 md:text-center"
                 style={{ boxShadow: "0 8px 24px rgba(26, 26, 26, 0.06)" }}
               >
-                <span className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-full">
+                <span className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-full md:h-14 md:w-14">
                   <span
                     className="absolute inset-0 rounded-full"
                     style={{ background: "var(--color-brand-primary)", opacity: "var(--icon-bg-opacity)" }}
@@ -234,16 +234,18 @@ export default function LoginPage() {
                     {r.icon}
                   </span>
                 </span>
-                <span className="flex-1">
+                <span className="flex-1 md:flex-none">
                   <span className="block whitespace-nowrap text-[15px] font-semibold text-[var(--color-text-primary)]">
                     {r.label}{" "}
-                    <span className="inline-block text-[10px] font-normal" style={{ verticalAlign: "baseline" }}>
+                    <span className="inline-block text-[10px] font-normal md:mt-0.5 md:block md:text-xs" style={{ verticalAlign: "baseline" }}>
                       ({r.sub})
                     </span>
                   </span>
                 </span>
-                <span className="material-symbols-rounded" style={{ fontSize: 16, color: "var(--color-text-secondary)" }}>
-                  arrow_forward_ios
+                <span className="md:hidden">
+                  <span className="material-symbols-rounded" style={{ fontSize: 16, color: "var(--color-text-secondary)" }}>
+                    arrow_forward_ios
+                  </span>
                 </span>
               </button>
             ))}
@@ -256,7 +258,7 @@ export default function LoginPage() {
 
   return (
     <div
-      className="relative flex w-full flex-1 flex-col lg:mx-auto lg:max-w-md"
+      className="relative flex w-full flex-1 flex-col"
       style={{
         background:
           theme === "light"
@@ -265,7 +267,7 @@ export default function LoginPage() {
       } as React.CSSProperties}
     >
       <AppHeader />
-      <main className="flex flex-1 flex-col px-2 pb-8">
+      <main className="flex flex-1 flex-col px-2 pb-8 md:mx-auto! md:w-full md:max-w-md">
         {step === "auth" && (
           <Card>
             <CardTitle title={`${roleInfo.label} Login`} sub="How would you like to continue?" />
@@ -376,8 +378,8 @@ export default function LoginPage() {
               Next
             </CardButton>
             <p className="mt-4 text-center text-xs text-[var(--color-text-secondary)]">
-              Do you already have an account?{" "}
-              <button type="button" onClick={() => setStep("auth")} className="font-semibold" style={{ color: "var(--color-brand-primary)" }}>
+              Already have an account?{" "}
+              <button type="button" onClick={() => setStep("loginId")} className="font-semibold" style={{ color: "var(--color-brand-primary)" }}>
                 Login
               </button>
             </p>

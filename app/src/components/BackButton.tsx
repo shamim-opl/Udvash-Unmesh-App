@@ -4,8 +4,8 @@ import Link from "next/link";
 
 function Chevron({ color = "var(--color-text-primary)" }: { color?: string }) {
   return (
-    <span className="material-symbols-rounded" style={{ fontSize: 18, color, transform: "rotate(180deg)" }}>
-      arrow_forward_ios
+    <span className="material-symbols-rounded" style={{ fontSize: 20, color }}>
+      arrow_back
     </span>
   );
 }
@@ -24,7 +24,7 @@ export default function BackButton({
   const style =
     variant === "overlay"
       ? { background: "rgba(255,255,255,0.15)" }
-      : { background: "color-mix(in srgb, var(--color-brand-primary) 8%, transparent)" };
+      : { background: "color-mix(in srgb, var(--color-brand-primary) 4%, transparent)" };
   const color = variant === "overlay" ? "white" : "var(--color-brand-primary)";
   const classes = `tap hidden lg:flex h-9 w-9 items-center justify-center rounded-full ${className}`;
 

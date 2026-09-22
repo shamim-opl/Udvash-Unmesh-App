@@ -1,8 +1,10 @@
 import AppHeader from "@/components/AppHeader";
 import HeroBanner from "@/components/HeroBanner";
 import ServiceCard from "@/components/ServiceCard";
+import ResultsSection from "@/components/ResultsSection";
 import BottomNav from "@/components/BottomNav";
 import PullToRefresh from "@/components/PullToRefresh";
+import { BookIcon, FreeCourseIcon } from "@/components/nav-icons";
 
 export default function Home() {
   return (
@@ -16,31 +18,25 @@ export default function Home() {
             <h2 className="mb-3 text-sm font-medium text-[var(--color-text-secondary)] opacity-70">
               তোমার জন্য
             </h2>
-            <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-3 md:grid md:grid-cols-2">
               <ServiceCard
                 href="/free-courses"
-                icon={
-                  <span className="material-symbols-rounded" style={{ fontSize: 26, color: "#FC5A5A" }}>
-                    school
-                  </span>
-                }
+                icon={<FreeCourseIcon color="#FC5A5A" size={26} />}
                 iconBg="#FC5A5A"
                 title="ট্রায়াল / ফ্রি কোর্স"
                 subtitle="শেখা শুরু হোক একদম বিনামূল্যে"
               />
               <ServiceCard
                 href="/programs"
-                icon={
-                  <span className="material-symbols-rounded" style={{ fontSize: 26, color: "#00BA00" }}>
-                    menu_book
-                  </span>
-                }
+                icon={<BookIcon color="#00BA00" size={26} />}
                 iconBg="#00BA00"
                 title="প্রোগ্রামসমূহ"
-                subtitle="আপনার প্রয়োজন অনুযায়ী বেছে নিন"
+                subtitle="আপনার প্রয়োজন অনুযায়ী বেছে নিন"
               />
             </div>
           </section>
+
+          <ResultsSection />
         </PullToRefresh>
       </main>
       <BottomNav />

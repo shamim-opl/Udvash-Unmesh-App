@@ -11,17 +11,33 @@ export default function PullToRefresh({ children }: { children: React.ReactNode 
   const [pull, setPull] = useState(0);
   const [refreshing, setRefreshing] = useState(false);
   const startY = useRef<number | null>(null);
+  const startX = useRef<number | null>(null);
+  const axis = useRef<"x" | "y" | null>(null);
   const dragging = useRef(false);
 
   const handleTouchStart = (e: React.TouchEvent) => {
     if (window.scrollY > 0 || refreshing) return;
     startY.current = e.touches[0].clientY;
+    startX.current = e.touches[0].clientX;
+    axis.current = null;
     dragging.current = true;
   };
 
   const handleTouchMove = (e: React.TouchEvent) => {
-    if (!dragging.current || startY.current === null) return;
-    const delta = e.touches[0].clientY - startY.current;
+    if (!dragging.current || startY.current === null || startX.current === null) return;
+    const dx = e.touches[0].clientX - startX.current;
+    const dy = e.touches[0].clientY - startY.current;
+    if (axis.current === null && Math.max(Math.abs(dx), Math.abs(dy)) > 8) {
+      axis.current = Math.abs(dx) > Math.abs(dy) ? "x" : "y";
+    }
+    if (axis.current === "x") {
+      dragging.current = false;
+      startY.current = null;
+      setPull(0);
+      return;
+    }
+    if (axis.current === null) return;
+    const delta = dy;
     if (delta <= 0) {
       setPull(0);
       return;
