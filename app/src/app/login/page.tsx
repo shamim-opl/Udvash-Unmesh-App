@@ -201,7 +201,6 @@ export default function LoginPage() {
             aria-label={theme === "dark" ? "লাইট মোড" : "ডার্ক মোড"}
             onClick={toggleTheme}
             className="tap absolute right-4 top-4 flex h-9 w-9 items-center justify-center rounded-full"
-            style={{ background: "rgba(255,255,255,0.15)" }}
           >
             {theme === "dark" ? <SunIcon /> : <MoonIcon />}
           </button>

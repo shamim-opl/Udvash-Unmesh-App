@@ -4,7 +4,7 @@ export default function HeroBanner() {
   return (
     <div className="mt-4 px-4">
       <div className="relative aspect-[1870/841] w-full overflow-hidden rounded-[12px]">
-        <Image src="/hero-banner-v6.png" alt="সম্পর্ক হোক সহযোগিতার — উদ্ভাস-উন্মেষ শিক্ষা পরিবার" fill className="object-cover" priority />
+        <Image src="/hero-banner-v8.webp" alt="সম্পর্ক হোক সহযোগিতার — উদ্ভাস-উন্মেষ শিক্ষা পরিবার" fill className="object-cover" priority />
         <span
           aria-hidden
           className="animate-banner-shine pointer-events-none absolute inset-y-0 left-0 w-1/3"
