@@ -23,7 +23,8 @@ export default function DownloadsPage() {
             <button
               key={item.id}
               type="button"
-              className="tap flex items-center gap-3 rounded-[10px] bg-[var(--color-surface)] p-3 text-left shadow-[var(--shadow-subtle)]"
+              className="tap flex items-center gap-3 rounded-[var(--radius-lg)] border bg-[var(--color-surface)] p-3 text-left transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-brand-primary)]"
+              style={{ borderColor: "color-mix(in srgb, var(--color-border) 50%, transparent)", boxShadow: "var(--shadow-subtle)" }}
             >
               <span
                 className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[10px]"

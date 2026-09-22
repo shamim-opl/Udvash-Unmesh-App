@@ -17,8 +17,8 @@ export default function ServiceCard({
   return (
     <Link
       href={href}
-      className="tap flex items-center gap-3 rounded-[var(--radius-lg)] bg-[var(--color-surface)] px-4 py-[18px]"
-      style={{ boxShadow: "0 8px 24px rgba(26, 26, 26, 0.08)" }}
+      className="tap flex items-center gap-3 rounded-[var(--radius-lg)] border bg-[var(--color-surface)] px-4 py-[18px] transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-brand-primary)]"
+      style={{ borderColor: "color-mix(in srgb, var(--color-border) 50%, transparent)", boxShadow: "var(--shadow-subtle)" }}
     >
       <span className="relative flex h-[52px] w-[52px] shrink-0 items-center justify-center rounded-full text-lg">
         <span className="absolute inset-0 rounded-full" style={{ background: iconBg, opacity: "var(--icon-bg-opacity)" }} />

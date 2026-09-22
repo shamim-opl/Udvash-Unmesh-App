@@ -23,7 +23,8 @@ export default function FreeCoursesPage() {
             <Link
               key={c.slug}
               href={`/free-courses/${c.slug}`}
-              className="tap flex flex-col items-center gap-2 rounded-[var(--radius-lg)] bg-[var(--color-surface)] px-2 py-4 text-center shadow-[var(--shadow-subtle)]"
+              className="tap flex flex-col items-center gap-2 rounded-[var(--radius-lg)] border bg-[var(--color-surface)] px-2 py-4 text-center transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-brand-primary)]"
+              style={{ borderColor: "color-mix(in srgb, var(--color-border) 50%, transparent)", boxShadow: "var(--shadow-subtle)" }}
             >
               <span className="relative flex h-11 w-11 items-center justify-center rounded-full">
                 <span className="absolute inset-0 rounded-full" style={{ background: c.bg, opacity: "var(--icon-bg-opacity)" }} />

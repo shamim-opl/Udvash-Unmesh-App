@@ -16,7 +16,7 @@ export default function ResultsSection() {
               draggable={false}
               title={r.note}
               aria-label={`${r.title} রেজাল্ট ২০২৫`}
-              className="tap relative flex h-[128px] flex-col items-center justify-center gap-2.5 rounded-[var(--radius-lg)] border bg-[var(--color-surface)] px-3 text-center focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-brand-primary)]"
+              className="tap relative flex h-[128px] flex-col items-center justify-center gap-2.5 rounded-[var(--radius-lg)] border bg-[var(--color-surface)] px-3 text-center transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-brand-primary)]"
               style={{ borderColor: "color-mix(in srgb, var(--color-border) 50%, transparent)", boxShadow: "var(--shadow-subtle)" }}
             >
               <span

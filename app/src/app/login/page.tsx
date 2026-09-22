@@ -222,8 +222,11 @@ export default function LoginPage() {
                   setRole(r.key);
                   setStep("auth");
                 }}
-                className="tap flex items-center gap-3 rounded-[var(--radius-lg)] bg-[var(--color-surface)] px-4 py-4 text-left md:flex-col md:justify-center md:gap-3 md:px-3 md:py-7 md:text-center"
-                style={{ boxShadow: "0 8px 24px rgba(26, 26, 26, 0.06)" }}
+                className="tap flex items-center gap-3 rounded-[var(--radius-lg)] border bg-[var(--color-surface)] px-4 py-4 text-left transition-colors duration-150 md:flex-col md:justify-center md:gap-3 md:px-3 md:py-7 md:text-center"
+                style={{
+                  borderColor: "color-mix(in srgb, var(--color-border) 50%, transparent)",
+                  boxShadow: "var(--shadow-subtle)",
+                }}
               >
                 <span className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-full md:h-14 md:w-14">
                   <span

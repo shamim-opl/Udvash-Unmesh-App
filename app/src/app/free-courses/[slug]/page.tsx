@@ -64,7 +64,13 @@ export default function FreeCoursesClassPage() {
       </header>
 
       <main className="flex-1 px-4 pb-6">
-        <div className="overflow-hidden rounded-[var(--radius-lg)] bg-[var(--color-surface)] shadow-[var(--shadow-subtle)]">
+        <div
+          className="overflow-hidden rounded-[var(--radius-lg)] border bg-[var(--color-surface)]"
+          style={{
+            borderColor: "color-mix(in srgb, var(--color-border) 50%, transparent)",
+            boxShadow: "var(--shadow-subtle)",
+          }}
+        >
           <div className="relative aspect-[2.2/1] w-full bg-[var(--color-border)]">
             {course.image && (
               <Image
