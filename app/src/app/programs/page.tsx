@@ -257,13 +257,13 @@ export default function ProgramsPage() {
                   ))}
                 </ul>
                 <div className="flex items-center justify-between gap-2 border-t pt-3" style={{ borderColor: "var(--color-border)" }}>
-                  <span className="text-xs text-[var(--color-text-secondary)]">{program.modes.join(" · ")}</span>
-                  <div className="flex items-center gap-2">
+                  <span className="min-w-0 flex-1 truncate text-xs text-[var(--color-text-secondary)]">{program.modes.join(" · ")}</span>
+                  <div className="flex shrink-0 items-center gap-2">
                     <a
                       href={`https://udvash.com/Program/Details/${program.id}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="tap rounded-[5px] border px-3 py-2 text-xs font-semibold text-[var(--color-brand-primary)]"
+                      className="tap whitespace-nowrap rounded-[5px] border px-3 py-2 text-xs font-semibold text-[var(--color-brand-primary)]"
                       style={{ borderColor: "var(--color-brand-primary)" }}
                     >
                       Details
@@ -272,7 +272,7 @@ export default function ProgramsPage() {
                       href="https://online.udvash-unmesh.com/"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="tap rounded-[5px] px-3 py-2 text-xs font-semibold text-white"
+                      className="tap whitespace-nowrap rounded-[5px] px-3 py-2 text-xs font-semibold text-white"
                       style={{ background: "var(--color-brand-primary)" }}
                     >
                       Enroll Now

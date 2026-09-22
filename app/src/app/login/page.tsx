@@ -10,6 +10,7 @@ import { useTheme } from "@/components/ThemeProvider";
 import AppHeader from "@/components/AppHeader";
 import BottomNav from "@/components/BottomNav";
 import BackButton from "@/components/BackButton";
+import { MoonIcon, SunIcon } from "@/components/nav-icons";
 
 type Role = "student" | "teacher" | "guardian";
 type Step =
@@ -145,7 +146,7 @@ function EyeToggle({ shown, onClick }: { shown: boolean; onClick: () => void }) 
 export default function LoginPage() {
   const router = useRouter();
   const { login, findProfileByPhone, findProfileByIdentifier } = useAuth();
-  const { theme } = useTheme();
+  const { theme, toggleTheme } = useTheme();
   const [step, setStep] = useState<Step>("role");
   const [role, setRole] = useState<Role | null>(null);
 
@@ -194,7 +195,16 @@ export default function LoginPage() {
             minHeight: 320,
           }}
         >
-          <BackButton href="/" variant="overlay" className="absolute left-4 top-4" />
+          <BackButton onClick={() => router.back()} variant="overlay" mobileVisible className="absolute left-4 top-4" />
+          <button
+            type="button"
+            aria-label={theme === "dark" ? "লাইট মোড" : "ডার্ক মোড"}
+            onClick={toggleTheme}
+            className="tap absolute right-4 top-4 flex h-9 w-9 items-center justify-center rounded-full"
+            style={{ background: "rgba(255,255,255,0.15)" }}
+          >
+            {theme === "dark" ? <SunIcon /> : <MoonIcon />}
+          </button>
           <span
             aria-hidden
             className="absolute rounded-full animate-role-glow"
