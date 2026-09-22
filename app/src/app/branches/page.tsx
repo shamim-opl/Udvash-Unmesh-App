@@ -93,7 +93,7 @@ export default function BranchesPage() {
       <AppHeader />
       <main className="flex-1 px-4 pb-6">
        <PullToRefresh>
-        <div className="relative mt-5 aspect-[2172/724] w-full overflow-hidden rounded-[8px]">
+        <div className="relative mt-3 aspect-[2172/724] w-full overflow-hidden rounded-[8px]">
           <Image
             src="/branches-banner-v3.png"
             alt={`আপনার কাছে সবচেয়ে কাছে উদ্ভাস-উন্মেষ, সারা দেশে ${totalBranches}+ শাখা`}

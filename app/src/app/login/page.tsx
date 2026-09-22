@@ -191,25 +191,25 @@ export default function LoginPage() {
           className="relative flex flex-col items-center justify-center overflow-hidden px-6 pb-16 pt-16"
           style={{
             background: "linear-gradient(180deg, color-mix(in srgb, var(--color-brand-primary) 72%, white) 0%, var(--color-brand-primary) 100%)",
-            minHeight: 360,
+            minHeight: 320,
           }}
         >
           <BackButton href="/" variant="overlay" className="absolute left-4 top-4" />
           <span
             aria-hidden
             className="absolute rounded-full animate-role-glow"
-            style={{ width: 270, height: 270, background: "rgba(255,255,255,0.06)" }}
+            style={{ width: 220, height: 220, background: "rgba(255,255,255,0.06)" }}
           />
           <Image
             src="/logo-stacked-dark-v3.png"
             alt="উদ্ভাস-উন্মেষ Online Care"
             width={216}
             height={220}
-            className="relative h-[104px] w-auto"
+            className="relative h-[84px] w-auto"
           />
         </div>
 
-        <div className="relative flex w-full flex-1 flex-col bg-[var(--color-bg-canvas)] px-6 pt-6 md:mx-auto md:max-w-2xl">
+        <div className="relative -mt-4 flex w-full flex-1 flex-col rounded-t-[16px] bg-[var(--color-bg-canvas)] px-6 pt-6 md:mx-auto md:max-w-2xl">
           <h1 className="mb-4 text-[20px] font-semibold text-[var(--color-text-primary)] md:text-center">
             আপনার ভূমিকা নির্বাচন করুন?
           </h1>
