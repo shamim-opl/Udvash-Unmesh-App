@@ -27,7 +27,11 @@ function BranchCard({ branch, division }: { branch: Branch; division: Division }
       >
         <span className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-full">
           <span className="absolute inset-0 rounded-full" style={{ background: "var(--color-brand-primary)", opacity: "var(--icon-bg-opacity)" }} />
-          <span className="material-symbols-rounded relative" aria-hidden style={{ fontSize: 20, color: "var(--color-brand-primary)" }}>
+          <span
+            className="material-symbols-rounded relative"
+            aria-hidden
+            style={{ fontSize: 22, color: "var(--color-text-secondary)", opacity: 0.6, fontVariationSettings: '"FILL" 1, "wght" 400, "GRAD" 0, "opsz" 24' }}
+          >
             location_on
           </span>
         </span>
@@ -89,7 +93,7 @@ export default function BranchesPage() {
       <AppHeader />
       <main className="flex-1 px-4 pb-6">
        <PullToRefresh>
-        <div className="relative aspect-[2172/724] w-full overflow-hidden rounded-[8px]">
+        <div className="relative mt-5 aspect-[2172/724] w-full overflow-hidden rounded-[8px]">
           <Image
             src="/branches-banner-v3.png"
             alt={`আপনার কাছে সবচেয়ে কাছে উদ্ভাস-উন্মেষ, সারা দেশে ${totalBranches}+ শাখা`}
@@ -156,9 +160,6 @@ export default function BranchesPage() {
                         boxShadow: active ? "none" : "var(--shadow-subtle)",
                       }}
                     >
-                      <span className="material-symbols-rounded shrink-0" aria-hidden style={{ fontSize: 22, color: "var(--color-brand-primary)" }}>
-                        directions
-                      </span>
                       <span className="min-w-0 flex-1">
                         <span className="block truncate text-sm font-semibold leading-snug text-[var(--color-text-primary)]">{division.name}</span>
                         <span className="block text-xs leading-snug text-[var(--color-text-secondary)]">{division.branches.length}টি শাখা</span>
@@ -213,9 +214,6 @@ export default function BranchesPage() {
                   className="tap flex w-full items-center gap-3 p-4 text-left transition-colors duration-200"
                   style={{ background: open ? "color-mix(in srgb, var(--color-brand-primary) 6%, var(--color-surface))" : undefined }}
                 >
-                  <span className="material-symbols-rounded" aria-hidden style={{ fontSize: 22, color: "var(--color-brand-primary)" }}>
-                    directions
-                  </span>
                   <span className="flex-1">
                     <span
                       className="block text-sm font-semibold"
@@ -250,7 +248,7 @@ export default function BranchesPage() {
                           <span
                             className="material-symbols-rounded shrink-0"
                             aria-hidden
-                            style={{ fontSize: 18, color: "var(--color-brand-primary)" }}
+                            style={{ fontSize: 20, color: "var(--color-text-secondary)", opacity: 0.6, fontVariationSettings: '"FILL" 1, "wght" 400, "GRAD" 0, "opsz" 24' }}
                           >
                             location_on
                           </span>

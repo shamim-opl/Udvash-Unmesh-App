@@ -25,6 +25,8 @@ export type Lesson = {
 export type FreeCourse = {
   title: string;
   subject: string;
+  image: string | null;
+  highlights: string[];
   videoCount: number;
   description: string;
   lessons: Lesson[];
@@ -62,6 +64,12 @@ export const FREE_COURSES: Record<string, FreeCourse> = Object.fromEntries(
     {
       title: `${c.label} ফ্রি কোর্স`,
       subject: "সকল বিষয়",
+      image: null,
+      highlights: [
+        "বিষয়ভিত্তিক বেসিক ধারণা তৈরি",
+        "অভিজ্ঞ শিক্ষকের সহজ ব্যাখ্যা",
+        "ফ্রি ক্লাস ভিডিও ও অনুশীলন",
+      ],
       videoCount: 5,
       description: "সম্পূর্ণ বিনামূল্যে! নিজের বিষয়ের ফ্রি কোর্স আজই শুরু করো এবং শিক্ষকের পড়ানোর ধরন নিজে অনুভব করো।",
       lessons: LESSON_TITLES.map((title, i) => ({ title, durationSec: LESSON_DURATIONS_SEC[i] })),

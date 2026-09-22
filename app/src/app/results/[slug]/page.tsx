@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import AppHeader from "@/components/AppHeader";
 import BackButton from "@/components/BackButton";
 import BottomNav from "@/components/BottomNav";
+import ResultCard from "@/components/ResultCard";
 import { RESULT_CATEGORIES } from "@/data/results";
 
 export function generateStaticParams() {
@@ -27,32 +28,7 @@ export default async function ResultCategoryPage({ params }: { params: Promise<{
         <ul className="flex flex-col gap-3">
           {category.documents.map((doc) => (
             <li key={doc.href}>
-              <a
-                href={doc.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={`${doc.label}, PDF (নতুন ট্যাবে খুলবে)`}
-                className="tap flex items-center gap-3 rounded-[var(--radius-lg)] border bg-[var(--color-surface)] px-4 py-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-brand-primary)]"
-                style={{ borderColor: "var(--color-border)", boxShadow: "var(--shadow-subtle)" }}
-              >
-                <span className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-full">
-                  <span className="absolute inset-0 rounded-full" style={{ background: category.color, opacity: "var(--icon-bg-opacity)" }} />
-                  <span className="material-symbols-rounded relative" style={{ fontSize: 22, color: category.color }}>
-                    picture_as_pdf
-                  </span>
-                </span>
-                <span className="min-w-0 flex-1">
-                  <span className="block text-base font-semibold leading-snug text-[var(--color-text-primary)]">{doc.label}</span>
-                  <span className="mt-0.5 block text-xs text-[var(--color-text-secondary)]">{doc.description} · PDF</span>
-                </span>
-                <span
-                  aria-hidden
-                  className="material-symbols-rounded shrink-0"
-                  style={{ fontSize: 20, color: "var(--color-text-secondary)" }}
-                >
-                  download
-                </span>
-              </a>
+              <ResultCard label={doc.label} href={doc.href} color={category.color} />
             </li>
           ))}
         </ul>

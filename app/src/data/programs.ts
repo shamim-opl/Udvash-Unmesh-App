@@ -15,6 +15,7 @@ export type Program = {
   modes: string[];
   startsAt?: string;
   gradient: [string, string];
+  image?: string;
 };
 
 // Source of truth: https://udvash.com/Program (scraped titles, start dates, and mode tags)
@@ -25,6 +26,7 @@ export const PROGRAMS: Program[] = [
     category: "Text",
     modes: ["Offline", "Online"],
     gradient: ["#3949AB", "#1A237E"],
+    image: "https://udvash-unmesh.com/media/Images/Udvash/program/2026/ParallalText1.png",
   },
   {
     id: "engineering-admission-2026",
@@ -33,6 +35,7 @@ export const PROGRAMS: Program[] = [
     modes: ["Offline", "Combo/Online"],
     startsAt: "১৭ আগস্ট, ২০২৬",
     gradient: ["#E53935", "#8E1526"],
+    image: "https://udvash-unmesh.com/media/Images/Udvash/program/2026/ap26/EAP26OfOn.jpeg",
   },
   {
     id: "medical-admission-2026",
@@ -41,6 +44,7 @@ export const PROGRAMS: Program[] = [
     modes: ["Offline", "Combo/Online"],
     startsAt: "১৬ আগস্ট, ২০২৬",
     gradient: ["#00897B", "#004D40"],
+    image: "https://udvash-unmesh.com/media/Images/Udvash/program/2026/ap26/MAP26OfOn.jpeg",
   },
   {
     id: "varsity-a-guccho-2026",
@@ -49,6 +53,7 @@ export const PROGRAMS: Program[] = [
     modes: ["Offline", "Combo/Online"],
     startsAt: "অফলাইন- ১৭ আগস্ট, অনলাইন- ১৮ আগস্ট, ২০২৬",
     gradient: ["#1E88E5", "#0D47A1"],
+    image: "https://udvash-unmesh.com/media/Images/Udvash/program/2026/ap26/VAPKa26OfOn.jpeg",
   },
   {
     id: "varsity-b-guccho-2026",
@@ -57,6 +62,7 @@ export const PROGRAMS: Program[] = [
     modes: ["Offline", "Combo/Online"],
     startsAt: "অফলাইন- ১৭ আগস্ট, অনলাইন- ১৮ আগস্ট, ২০২৬",
     gradient: ["#8E24AA", "#4A148C"],
+    image: "https://udvash-unmesh.com/media/Images/Udvash/program/2026/ap26/VAPKha26OfOn.jpeg",
   },
   {
     id: "2nd-time-medical-2026",

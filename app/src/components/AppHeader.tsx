@@ -54,7 +54,7 @@ export default function AppHeader() {
   const iconColor = "var(--color-brand-primary)";
 
   return (
-    <header className="relative flex items-center justify-between px-4 py-3 lg:justify-end lg:px-8" ref={containerRef}>
+    <header className="relative flex h-[50px] items-center justify-between px-4 py-0 lg:h-auto lg:justify-end lg:px-8 lg:py-3" ref={containerRef}>
       <Link href="/" className="tap flex items-center gap-2.5 lg:hidden">
         <Image
           src={theme === "dark" ? "/logo-dark.png" : "/logo.png"}

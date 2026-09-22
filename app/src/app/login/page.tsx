@@ -235,11 +235,8 @@ export default function LoginPage() {
                   </span>
                 </span>
                 <span className="flex-1 md:flex-none">
-                  <span className="block whitespace-nowrap text-[15px] font-semibold text-[var(--color-text-primary)]">
-                    {r.label}{" "}
-                    <span className="inline-block text-[10px] font-normal md:mt-0.5 md:block md:text-xs" style={{ verticalAlign: "baseline" }}>
-                      ({r.sub})
-                    </span>
+                  <span className="block whitespace-nowrap text-[17px] font-semibold text-[var(--color-text-primary)]">
+                    {r.label}
                   </span>
                 </span>
                 <span className="md:hidden">
