@@ -10,6 +10,7 @@ export default function PullToRefresh({ children }: { children: React.ReactNode 
   const router = useRouter();
   const [pull, setPull] = useState(0);
   const [refreshing, setRefreshing] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
   const startY = useRef<number | null>(null);
   const startX = useRef<number | null>(null);
   const axis = useRef<"x" | "y" | null>(null);
@@ -21,6 +22,7 @@ export default function PullToRefresh({ children }: { children: React.ReactNode 
     startX.current = e.touches[0].clientX;
     axis.current = null;
     dragging.current = true;
+    setIsDragging(true);
   };
 
   const handleTouchMove = (e: React.TouchEvent) => {
@@ -32,6 +34,7 @@ export default function PullToRefresh({ children }: { children: React.ReactNode 
     }
     if (axis.current === "x") {
       dragging.current = false;
+      setIsDragging(false);
       startY.current = null;
       setPull(0);
       return;
@@ -48,6 +51,7 @@ export default function PullToRefresh({ children }: { children: React.ReactNode 
   const handleTouchEnd = () => {
     if (!dragging.current) return;
     dragging.current = false;
+    setIsDragging(false);
     startY.current = null;
 
     if (pull >= PULL_THRESHOLD) {
@@ -70,7 +74,7 @@ export default function PullToRefresh({ children }: { children: React.ReactNode 
         className="flex items-center justify-center overflow-hidden"
         style={{
           height: pull,
-          transition: dragging.current ? "none" : "height 200ms ease-out",
+          transition: isDragging ? "none" : "height 200ms ease-out",
         }}
       >
         <span

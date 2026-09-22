@@ -19,16 +19,17 @@ function InfoRow({ label, value }: { label: string; value?: string }) {
 
 export default function ProfilePage() {
   const router = useRouter();
-  const { isLoggedIn, profile, logout } = useAuth();
+  const { isLoggedIn, profile, ready, logout } = useAuth();
 
   useEffect(() => {
+    if (!ready) return;
     if (!isLoggedIn || !profile) {
       logout();
       router.replace("/login");
     }
-  }, [isLoggedIn, profile, logout, router]);
+  }, [ready, isLoggedIn, profile, logout, router]);
 
-  if (!isLoggedIn || !profile) return null;
+  if (!ready || !isLoggedIn || !profile) return null;
 
   return (
     <>

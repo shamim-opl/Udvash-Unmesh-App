@@ -28,6 +28,7 @@ function readKnownProfiles(): Record<string, UserProfile> {
 const AuthContext = createContext<{
   isLoggedIn: boolean;
   profile: UserProfile | null;
+  ready: boolean;
   login: (profile: UserProfile) => void;
   logout: () => void;
   findProfileByPhone: (phone: string) => UserProfile | null;
@@ -35,6 +36,7 @@ const AuthContext = createContext<{
 }>({
   isLoggedIn: false,
   profile: null,
+  ready: false,
   login: () => {},
   logout: () => {},
   findProfileByPhone: () => null,
@@ -48,11 +50,17 @@ export function useAuth() {
 export default function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [profile, setProfile] = useState<UserProfile | null>(null);
+  // True once the localStorage session has been read on the client. Pages
+  // that redirect unauthenticated users must wait for this — otherwise
+  // they see the initial isLoggedIn=false and boot out an actually-logged-in
+  // user before this effect has had a chance to run.
+  const [ready, setReady] = useState(false);
 
   useEffect(() => {
     setIsLoggedIn(localStorage.getItem("isLoggedIn") === "true");
     const stored = localStorage.getItem("userProfile");
     if (stored) setProfile(JSON.parse(stored));
+    setReady(true);
   }, []);
 
   const login = (nextProfile: UserProfile) => {
@@ -83,7 +91,7 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
 
   return (
     <AuthContext.Provider
-      value={{ isLoggedIn, profile, login, logout, findProfileByPhone, findProfileByIdentifier }}
+      value={{ isLoggedIn, profile, ready, login, logout, findProfileByPhone, findProfileByIdentifier }}
     >
       {children}
     </AuthContext.Provider>

@@ -65,12 +65,12 @@ export default function AppHeader() {
         />
       </Link>
 
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2.5">
         <button
           type="button"
           aria-label={theme === "dark" ? "লাইট মোড" : "ডার্ক মোড"}
           onClick={toggleTheme}
-          className="tap flex h-9 w-9 items-center justify-center rounded-full"
+          className="tap flex h-7 w-7 items-center justify-center rounded-full"
         >
           {theme === "dark" ? <SunIcon /> : <MoonIcon />}
         </button>
@@ -81,13 +81,13 @@ export default function AppHeader() {
             aria-label="বিজ্ঞপ্তি"
             aria-expanded={open}
             onClick={() => setOpen((v) => !v)}
-            className="tap relative flex h-9 w-9 items-center justify-center rounded-full"
+            className="tap relative flex h-7 w-7 items-center justify-center rounded-full"
             style={{ background: iconBg, color: iconColor }}
           >
             <span
               className="material-symbols-rounded"
               style={{
-                fontSize: 22,
+                fontSize: 20,
                 color: iconColor,
                 fontVariationSettings: "'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24",
               }}
