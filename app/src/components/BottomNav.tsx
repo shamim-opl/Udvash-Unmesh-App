@@ -1,9 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useAuth } from "@/components/AuthProvider";
-import { AvatarIcon, BranchesIcon, HomeIcon } from "@/components/nav-icons";
+import { BranchesIcon, HomeIcon } from "@/components/nav-icons";
 
 const ITEMS = [
   { href: "/", label: "Home", icon: HomeIcon },
@@ -12,7 +12,8 @@ const ITEMS = [
 
 export default function BottomNav() {
   const pathname = usePathname();
-  const { isLoggedIn } = useAuth();
+  const router = useRouter();
+  const { isLoggedIn, logout } = useAuth();
   const accountHref = isLoggedIn ? "/profile" : "/login";
   const accountActive = pathname === accountHref;
 
@@ -39,17 +40,44 @@ export default function BottomNav() {
         );
       })}
 
-      <Link href={accountHref} className="tap flex h-[54px] flex-col items-center justify-center gap-0.5 text-[11px]">
-        <span
-          className="flex h-8 w-8 items-center justify-center rounded-[5px]"
-          style={{ background: accountActive ? "var(--color-brand-primary)" : "transparent" }}
+      {isLoggedIn ? (
+        <button
+          type="button"
+          onClick={() => {
+            logout();
+            router.push("/");
+          }}
+          className="tap flex h-[54px] flex-col items-center justify-center gap-0.5 text-[11px]"
         >
-          <AvatarIcon color={accountActive ? "#EAD8FF" : "var(--color-brand-primary)"} />
-        </span>
-        <span className={accountActive ? "font-semibold text-[var(--color-brand-primary)]" : "text-[var(--color-text-secondary)]"}>
-          {isLoggedIn ? "Profile" : "Login"}
-        </span>
-      </Link>
+          <span className="flex h-8 w-8 items-center justify-center rounded-[5px]">
+            <span className="material-symbols-rounded" style={{ fontSize: 22, color: "var(--color-brand-primary)", fontVariationSettings: '"FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24' }}>
+              logout
+            </span>
+          </span>
+          <span className="text-[var(--color-text-secondary)]">Logout</span>
+        </button>
+      ) : (
+        <Link href={accountHref} className="tap flex h-[54px] flex-col items-center justify-center gap-0.5 text-[11px]">
+          <span
+            className="flex h-8 w-8 items-center justify-center rounded-[5px]"
+            style={{ background: accountActive ? "var(--color-brand-primary)" : "transparent" }}
+          >
+            <span
+              className="material-symbols-rounded"
+              style={{
+                fontSize: 22,
+                color: accountActive ? "#EAD8FF" : "var(--color-brand-primary)",
+                fontVariationSettings: '"FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24',
+              }}
+            >
+              logout
+            </span>
+          </span>
+          <span className={accountActive ? "font-semibold text-[var(--color-brand-primary)]" : "text-[var(--color-text-secondary)]"}>
+            Login
+          </span>
+        </Link>
+      )}
     </nav>
   );
 }

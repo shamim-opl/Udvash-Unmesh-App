@@ -2,16 +2,28 @@
 
 import { useRef } from "react";
 
-export default function DragScroll({ className, children }: { className?: string; children: React.ReactNode }) {
-  const ref = useRef<HTMLUListElement>(null);
+export default function DragScroll({
+  className,
+  children,
+  tag = "ul",
+  role,
+  "aria-label": ariaLabel,
+}: {
+  className?: string;
+  children: React.ReactNode;
+  tag?: "ul" | "div";
+  role?: string;
+  "aria-label"?: string;
+}) {
+  const ref = useRef<HTMLUListElement & HTMLDivElement>(null);
   const state = useRef({ down: false, moved: false, startX: 0, startLeft: 0 });
 
-  const onPointerDown = (e: React.PointerEvent<HTMLUListElement>) => {
+  const onPointerDown = (e: React.PointerEvent) => {
     if (e.pointerType !== "mouse" || e.button !== 0 || !ref.current) return;
     state.current = { down: true, moved: false, startX: e.clientX, startLeft: ref.current.scrollLeft };
   };
 
-  const onPointerMove = (e: React.PointerEvent<HTMLUListElement>) => {
+  const onPointerMove = (e: React.PointerEvent) => {
     const el = ref.current;
     const s = state.current;
     if (!s.down || !el) return;
@@ -34,17 +46,20 @@ export default function DragScroll({ className, children }: { className?: string
     el.style.cursor = "";
   };
 
+  const Tag = tag;
   return (
-    <ul
+    <Tag
       ref={ref}
       className={className}
+      role={role}
+      aria-label={ariaLabel}
       onPointerDown={onPointerDown}
       onPointerMove={onPointerMove}
       onPointerUp={end}
       onPointerLeave={end}
       onPointerCancel={end}
-      onDragStart={(e) => e.preventDefault()}
-      onClickCapture={(e) => {
+      onDragStart={(e: React.DragEvent) => e.preventDefault()}
+      onClickCapture={(e: React.MouseEvent) => {
         if (state.current.moved) {
           e.preventDefault();
           e.stopPropagation();
@@ -53,6 +68,6 @@ export default function DragScroll({ className, children }: { className?: string
       }}
     >
       {children}
-    </ul>
+    </Tag>
   );
 }

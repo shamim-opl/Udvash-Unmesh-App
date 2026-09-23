@@ -2,57 +2,61 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import AppHeader from "@/components/AppHeader";
 import BottomNav from "@/components/BottomNav";
 import PullToRefresh from "@/components/PullToRefresh";
-import { DIVISIONS, type Branch, type Division } from "@/data/branches";
-
-const mapsHref = (branch: Branch, division: Division) =>
-  `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`Udvash-Unmesh ${branch.en} ${division.en} Bangladesh`)}`;
-
-const telHref = (phone: string) => `tel:${phone.startsWith("88") ? `+${phone}` : phone}`;
+import DragScroll from "@/components/DragScroll";
+import { DIVISIONS, telHref, slugify, type Branch, type Division } from "@/data/branches";
 
 function BranchCard({ branch, division }: { branch: Branch; division: Division }) {
+  const router = useRouter();
+  const href = `/branches/${division.slug}/${slugify(branch.en)}`;
+
   return (
     <div
-      className="group/card flex h-full flex-col gap-3 rounded-[var(--radius-lg)] border bg-[var(--color-surface)] p-3.5 transition-[transform,border-color,box-shadow] duration-150 ease-out hover:-translate-y-0.5 hover:border-[var(--color-brand-primary)] hover:shadow-[var(--shadow-high)]"
+      role="link"
+      tabIndex={0}
+      onClick={() => router.push(href)}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          router.push(href);
+        }
+      }}
+      aria-label={`${branch.name} শাখার বিবরণ দেখুন`}
+      className="group/card flex h-full cursor-pointer flex-col gap-3 rounded-[var(--radius-lg)] border bg-[var(--color-surface)] p-3.5 transition-[transform,border-color,box-shadow] duration-150 ease-out hover:-translate-y-0.5 hover:border-[var(--color-brand-primary)] hover:shadow-[var(--shadow-high)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-brand-primary)]"
       style={{ borderColor: "var(--color-border)", boxShadow: "var(--shadow-subtle)" }}
     >
-      <a
-        href={mapsHref(branch, division)}
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label={`${branch.name} শাখা Google Maps-এ দেখুন`}
-        className="group flex items-center gap-3"
-      >
+      <div className="flex items-center gap-3">
         <span className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-full">
-          <span className="absolute inset-0 rounded-full" style={{ background: "var(--color-brand-primary)", opacity: "var(--icon-bg-opacity)" }} />
           <span
             className="material-symbols-rounded relative"
             aria-hidden
-            style={{ fontSize: 22, color: "var(--color-text-secondary)", opacity: 0.6, fontVariationSettings: '"FILL" 1, "wght" 400, "GRAD" 0, "opsz" 24' }}
+            style={{ fontSize: 28, color: "var(--color-text-secondary)", opacity: 0.6, fontVariationSettings: '"FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24' }}
           >
-            location_on
+            pin_drop
           </span>
         </span>
         <span className="min-w-0 flex-1">
           <span className="block truncate text-[15px] font-semibold leading-snug text-[var(--color-text-primary)]">{branch.name}</span>
-          <span className="block truncate text-xs leading-snug text-[var(--color-text-secondary)]">{division.name} · ম্যাপে দেখুন</span>
+          <span className="block truncate text-xs leading-snug text-[var(--color-text-secondary)]">{division.name}</span>
         </span>
         <span
-          className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full transition-colors duration-150 group-hover:bg-[var(--color-brand-primary)] group-hover:[&>span]:!text-white"
+          className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full transition-colors duration-150 group-hover/card:bg-[var(--color-brand-primary)] group-hover/card:[&>span]:!text-white"
           style={{ background: "color-mix(in srgb, var(--color-brand-primary) 8%, transparent)" }}
         >
           <span className="material-symbols-rounded" aria-hidden style={{ fontSize: 16, color: "var(--color-brand-primary)" }}>
-            north_east
+            chevron_right
           </span>
         </span>
-      </a>
+      </div>
       <div className="mt-auto flex flex-wrap gap-2 border-t pt-3" style={{ borderColor: "color-mix(in srgb, var(--color-border) 60%, transparent)" }}>
         {branch.phones.map((phone) => (
           <a
             key={phone}
             href={telHref(phone)}
+            onClick={(e) => e.stopPropagation()}
             aria-label={`${branch.name} শাখায় কল করুন ${phone}`}
             className="tap inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition-colors hover:!bg-[var(--color-brand-primary)] hover:!text-white"
             style={{ background: "color-mix(in srgb, var(--color-brand-primary) 8%, transparent)", color: "var(--color-brand-primary)" }}
@@ -71,6 +75,7 @@ function BranchCard({ branch, division }: { branch: Branch; division: Division }
 export default function BranchesPage() {
   const [query, setQuery] = useState("");
   const [openDivision, setOpenDivision] = useState<string | null>(null);
+  const [mobileTab, setMobileTab] = useState<string | null>(null);
 
   const totalBranches = DIVISIONS.reduce((sum, d) => sum + d.branches.length, 0);
   const q = query.trim().toLowerCase();
@@ -103,11 +108,7 @@ export default function BranchesPage() {
           />
         </div>
 
-        <p className="mt-4 text-sm text-[var(--color-text-secondary)]">
-          সারা দেশে আমাদের {totalBranches}+ শাখা
-        </p>
-
-        <div className="mt-3 flex items-center gap-2 rounded-[5px] border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2.5 transition-colors duration-150 ease-out has-[:focus-visible]:border-[var(--color-brand-primary)]">
+        <div className="mt-5 flex items-center gap-2 rounded-full border border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-2.5 transition-colors duration-150 ease-out has-[:focus-visible]:border-[var(--color-brand-primary)]">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--color-text-secondary)" strokeWidth="2">
             <circle cx="11" cy="11" r="7" />
             <path d="M21 21l-4.35-4.35" strokeLinecap="round" />
@@ -115,7 +116,7 @@ export default function BranchesPage() {
           <input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="শাখা খুঁজুন (জেলা বা নাম)"
+            placeholder="Search branch or district"
             className="w-full bg-transparent text-sm text-[var(--color-text-primary)] outline-none placeholder:text-[var(--color-text-secondary)]"
           />
         </div>
@@ -187,110 +188,72 @@ export default function BranchesPage() {
           )}
         </div>
 
-        <div className="mt-4 flex flex-col gap-3 md:hidden">
-          {filtered.map((division) => {
-            const open = openDivision === division.slug || Boolean(q);
-            return (
-              <div
-                key={division.slug}
-                data-division={division.slug}
-                className="scroll-mt-4 overflow-hidden rounded-[var(--radius-lg)] border bg-[var(--color-surface)] transition-colors duration-200"
-                style={{
-                  borderColor: open ? "var(--color-brand-primary)" : "transparent",
-                  boxShadow: open ? "none" : "var(--shadow-subtle)",
-                }}
-              >
+        <div className="mt-5 md:hidden">
+          <DragScroll
+            tag="div"
+            role="tablist"
+            aria-label="বিভাগ"
+            className="-mx-4 flex cursor-grab gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          >
+            <button
+              type="button"
+              role="tab"
+              aria-selected={mobileTab === null}
+              onClick={() => setMobileTab(null)}
+              className="tap shrink-0 rounded-full border px-4 py-2 text-sm font-semibold transition-colors"
+              style={{
+                borderColor: mobileTab === null ? "var(--color-brand-primary)" : "var(--color-border)",
+                background: mobileTab === null ? "var(--color-brand-primary)" : "var(--color-surface)",
+                color: mobileTab === null ? "white" : "var(--color-text-primary)",
+              }}
+            >
+              All
+            </button>
+            {DIVISIONS.map((division) => {
+              const active = mobileTab === division.slug;
+              return (
                 <button
+                  key={division.slug}
                   type="button"
-                  aria-expanded={open}
-                  onClick={(e) => {
-                    const opening = !(open && !q);
-                    setOpenDivision(opening ? division.slug : null);
-                    if (opening) {
-                      const card = e.currentTarget.closest("[data-division]");
-                      requestAnimationFrame(() => card?.scrollIntoView({ behavior: "smooth", block: "start" }));
-                    }
+                  role="tab"
+                  aria-selected={active}
+                  onClick={() => setMobileTab(division.slug)}
+                  className="tap shrink-0 rounded-full border px-4 py-2 text-sm font-semibold transition-colors"
+                  style={{
+                    borderColor: active ? "var(--color-brand-primary)" : "var(--color-border)",
+                    background: active ? "var(--color-brand-primary)" : "var(--color-surface)",
+                    color: active ? "white" : "var(--color-text-primary)",
                   }}
-                  className="tap flex w-full items-center gap-3 p-4 text-left transition-colors duration-200"
-                  style={{ background: open ? "color-mix(in srgb, var(--color-brand-primary) 6%, var(--color-surface))" : undefined }}
                 >
-                  <span className="flex-1">
-                    <span
-                      className="block text-sm font-semibold"
-                      style={{ color: open ? "var(--color-brand-primary)" : "var(--color-text-primary)" }}
-                    >
-                      {division.name}
-                    </span>
-                    <span className="block text-xs text-[var(--color-text-secondary)]">
-                      {division.branches.length}টি শাখা
-                    </span>
-                  </span>
-                  <svg
-                    width="18"
-                    height="18"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke={open ? "var(--color-brand-primary)" : "var(--color-text-secondary)"}
-                    strokeWidth={open ? 2.5 : 2}
-                    style={{ transform: open ? "rotate(90deg)" : undefined, transition: "transform 200ms ease-out" }}
-                  >
-                    <path d="M9 6l6 6-6 6" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
+                  {division.en}
                 </button>
-                {open && (
-                  <div className="animate-dropdown-in max-h-[420px] overflow-y-auto border-t border-[var(--color-border)] p-3">
-                    <div className="flex flex-col gap-2">
-                      {division.branches.map((branch) => (
-                        <div
-                          key={branch.name}
-                          className="flex items-center gap-3 rounded-[var(--radius-md)] bg-[var(--color-bg-canvas)] px-3 py-2.5"
-                        >
-                          <span
-                            className="material-symbols-rounded shrink-0"
-                            aria-hidden
-                            style={{ fontSize: 20, color: "var(--color-text-secondary)", opacity: 0.6, fontVariationSettings: '"FILL" 1, "wght" 400, "GRAD" 0, "opsz" 24' }}
-                          >
-                            location_on
-                          </span>
-                          <div className="min-w-0 flex-1">
-                            <a
-                              href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-                                `Udvash-Unmesh ${branch.en} ${division.en} Bangladesh`
-                              )}`}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              aria-label={`${branch.name} শাখা Google Maps-এ দেখুন`}
-                              className="block truncate text-sm font-semibold text-[var(--color-text-primary)] underline-offset-2 hover:underline"
-                            >
-                              {branch.name}
-                            </a>
-                            <p className="mt-0.5 flex flex-wrap gap-x-3 gap-y-1 text-xs">
-                              {branch.phones.map((phone) => (
-                                <a
-                                  key={phone}
-                                  href={`tel:${phone.startsWith("88") ? `+${phone}` : phone}`}
-                                  aria-label={`${branch.name} শাখায় কল করুন ${phone}`}
-                                  className="py-0.5 font-medium underline underline-offset-2"
-                                  style={{ color: "var(--color-brand-primary)" }}
-                                >
-                                  {phone}
-                                </a>
-                              ))}
-                            </p>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
+              );
+            })}
+          </DragScroll>
+
+          {(() => {
+            const tabFiltered = mobileTab ? filtered.filter((d) => d.slug === mobileTab) : filtered;
+            const branchCount = tabFiltered.reduce((sum, d) => sum + d.branches.length, 0);
+            return (
+              <>
+                <p className="mb-3 mt-4 text-sm font-medium text-[var(--color-brand-primary)]">
+                  {branchCount}টি শাখা পাওয়া গেছে
+                </p>
+                <div className="flex flex-col gap-3">
+                  {tabFiltered.map((division) =>
+                    division.branches.map((branch) => (
+                      <BranchCard key={`${division.slug}-${branch.name}`} branch={branch} division={division} />
+                    ))
+                  )}
+                </div>
+                {branchCount === 0 && (
+                  <p className="py-8 text-center text-sm text-[var(--color-text-secondary)]">
+                    কোনো শাখা পাওয়া যায়নি।
+                  </p>
                 )}
-              </div>
+              </>
             );
-          })}
-          {filtered.length === 0 && (
-            <p className="py-8 text-center text-sm text-[var(--color-text-secondary)]">
-              কোনো শাখা পাওয়া যায়নি।
-            </p>
-          )}
+          })()}
         </div>
        </PullToRefresh>
       </main>
