@@ -27,7 +27,7 @@ export default function Home() {
               />
               <ServiceCard
                 href="/programs"
-                icon={<BookIcon color="#00BA00" size={36} />}
+                icon={<BookIcon color="#00BA00" size={35} />}
                 iconBg="#00BA00"
                 title="প্রোগ্রামসমূহ"
                 subtitle="আপনার প্রয়োজন অনুযায়ী বেছে নিন"
