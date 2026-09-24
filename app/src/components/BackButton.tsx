@@ -15,7 +15,7 @@ export default function BackButton({
   onClick,
   variant = "light",
   className = "",
-  mobileVisible = false,
+  mobileVisible = true,
 }: {
   href?: string;
   onClick?: () => void;
