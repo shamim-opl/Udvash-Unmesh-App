@@ -19,7 +19,7 @@ export default async function FreeCoursesPickPage({ params }: { params: Promise<
     <>
       <AppHeader />
       <header className="relative mb-2 flex items-center justify-center gap-3 px-4 py-3">
-        <span className="absolute left-4 lg:left-8"><BackButton href="/free-courses" /></span>
+        <span className="absolute back-btn-offset"><BackButton href="/free-courses" /></span>
         <h1 className="font-heading text-[18px] font-semibold leading-none text-[#616161]">{classLevel.enLabel}</h1>
       </header>
 

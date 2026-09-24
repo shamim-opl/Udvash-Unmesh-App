@@ -27,7 +27,7 @@ export default function ProgramsPickClassPage() {
     <>
       <AppHeader />
       <header className="relative mb-2 flex items-center justify-center gap-3 px-4 py-3">
-        <span className="absolute left-4 lg:left-8"><BackButton href="/" /></span>
+        <span className="absolute back-btn-offset"><BackButton href="/" /></span>
         <h1 className="font-heading text-[18px] font-semibold leading-none text-[#616161]">আমাদের প্রোগ্রামসমূহ</h1>
       </header>
 

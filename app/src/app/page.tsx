@@ -13,7 +13,7 @@ export default function Home() {
         <PullToRefresh>
           <HeroBanner />
 
-          <section className="mt-6 px-4">
+          <section className="mt-8 px-4">
             <h2 className="mb-3 text-sm font-medium text-[var(--color-text-secondary)] opacity-70">
               Explore Learning
             </h2>

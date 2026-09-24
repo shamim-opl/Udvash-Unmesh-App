@@ -273,3 +273,23 @@ select {
     margin-inline: 184px;
   }
 }
+
+/* Back button: pin to the same left inset as main's body margin above. */
+.back-btn-offset {
+  left: 16px;
+}
+@media (min-width: 1024px) {
+  .back-btn-offset {
+    left: 32px;
+  }
+}
+@media (min-width: 1280px) {
+  .back-btn-offset {
+    left: 104px;
+  }
+}
+@media (min-width: 1536px) {
+  .back-btn-offset {
+    left: 184px;
+  }
+}

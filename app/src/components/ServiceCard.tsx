@@ -17,7 +17,7 @@ export default function ServiceCard({
   return (
     <Link
       href={href}
-      className="tap flex items-center gap-3 rounded-[var(--radius-lg)] border bg-[var(--color-surface)] px-3 py-8 transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-brand-primary)] sm:gap-5 sm:px-5 sm:py-10"
+      className="tap flex items-center gap-3 rounded-[var(--radius-lg)] border bg-[var(--color-surface)] px-3 py-9 transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-brand-primary)] sm:gap-5 sm:px-5 sm:py-11"
       style={{ borderColor: "color-mix(in srgb, var(--color-border) 50%, transparent)", boxShadow: "var(--shadow-subtle)" }}
     >
       <span className="relative flex h-14 w-14 shrink-0 items-center justify-center rounded-full text-lg sm:h-20 sm:w-20">

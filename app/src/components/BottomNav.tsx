@@ -28,10 +28,10 @@ export default function BottomNav() {
         return (
           <Link key={item.href} href={item.href} className="tap flex h-[54px] flex-col items-center justify-center gap-0.5 text-[11px]">
             <span
-              className="flex h-8 w-8 items-center justify-center rounded-[5px]"
+              className="flex h-9 w-9 items-center justify-center rounded-[5px]"
               style={{ background: active ? "var(--color-brand-primary)" : "transparent" }}
             >
-              <Icon color={active ? "#EAD8FF" : "var(--color-brand-primary)"} />
+              <Icon color={active ? "#EAD8FF" : "var(--color-brand-primary)"} size={22} />
             </span>
             <span className={active ? "font-semibold text-[var(--color-brand-primary)]" : "text-[var(--color-text-secondary)]"}>
               {item.label}
@@ -49,8 +49,8 @@ export default function BottomNav() {
           }}
           className="tap flex h-[54px] flex-col items-center justify-center gap-0.5 text-[11px]"
         >
-          <span className="flex h-8 w-8 items-center justify-center rounded-[5px]">
-            <span className="material-symbols-rounded" style={{ fontSize: 22, color: "var(--color-brand-primary)", fontVariationSettings: '"FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24' }}>
+          <span className="flex h-9 w-9 items-center justify-center rounded-[5px]">
+            <span className="material-symbols-rounded" style={{ fontSize: 24, color: "var(--color-brand-primary)", fontVariationSettings: '"FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24' }}>
               logout
             </span>
           </span>
@@ -59,13 +59,13 @@ export default function BottomNav() {
       ) : (
         <Link href={accountHref} className="tap flex h-[54px] flex-col items-center justify-center gap-0.5 text-[11px]">
           <span
-            className="flex h-8 w-8 items-center justify-center rounded-[5px]"
+            className="flex h-9 w-9 items-center justify-center rounded-[5px]"
             style={{ background: accountActive ? "var(--color-brand-primary)" : "transparent" }}
           >
             <span
               className="material-symbols-rounded"
               style={{
-                fontSize: 22,
+                fontSize: 24,
                 color: accountActive ? "#EAD8FF" : "var(--color-brand-primary)",
                 fontVariationSettings: '"FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24',
               }}

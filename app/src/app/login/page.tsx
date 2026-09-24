@@ -196,7 +196,7 @@ export default function LoginPage() {
             minHeight: 320,
           }}
         >
-          <BackButton onClick={() => router.back()} variant="overlay" mobileVisible className="absolute left-4 top-4" />
+          <BackButton onClick={() => router.back()} variant="overlay" className="absolute left-4 top-4" />
           <button
             type="button"
             aria-label={theme === "dark" ? "লাইট মোড" : "ডার্ক মোড"}

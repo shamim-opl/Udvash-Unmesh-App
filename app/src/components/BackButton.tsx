@@ -15,20 +15,18 @@ export default function BackButton({
   onClick,
   variant = "light",
   className = "",
-  mobileVisible = true,
 }: {
   href?: string;
   onClick?: () => void;
   variant?: "light" | "overlay";
   className?: string;
-  mobileVisible?: boolean;
 }) {
   const style =
     variant === "overlay"
       ? { background: "rgba(255,255,255,0.15)" }
       : { background: "color-mix(in srgb, var(--color-brand-primary) 4%, transparent)" };
   const color = variant === "overlay" ? "white" : "var(--color-brand-primary)";
-  const classes = `tap ${mobileVisible ? "flex" : "hidden lg:flex"} h-9 w-9 items-center justify-center rounded-full ${className}`;
+  const classes = `tap flex h-9 w-9 items-center justify-center rounded-full ${className}`;
 
   if (href) {
     return (

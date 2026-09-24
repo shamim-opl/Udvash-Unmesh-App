@@ -60,7 +60,7 @@ export default function ProgramsClassModeListPage({
     <>
       <AppHeader />
       <header className="relative mb-2 flex flex-col items-center justify-center gap-0.5 px-4 py-3">
-        <span className="absolute left-4 top-1/2 -translate-y-1/2 lg:left-8"><BackButton href={`/programs/${classSlug}`} /></span>
+        <span className="absolute back-btn-offset top-1/2 -translate-y-1/2"><BackButton href={`/programs/${classSlug}`} /></span>
         <h1 className="font-heading text-[18px] font-semibold leading-none text-[#616161]">
           {chip.slug === "model-test" || chip.slug === "admission" ? chip.label : `Class ${chip.slug}`}
         </h1>
