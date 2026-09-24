@@ -49,7 +49,6 @@ export default async function BranchDetailsPage({
             </span>
             <div className="min-w-0">
               <h2 className="text-2xl font-bold text-white">{branch.name}</h2>
-              <p className="mt-0.5 text-sm text-white/80">{branch.en}</p>
             </div>
           </div>
 
