@@ -51,14 +51,14 @@ function BranchCard({ branch, division }: { branch: Branch; division: Division }
           </span>
         </span>
       </div>
-      <div className="mt-auto flex flex-wrap gap-2 border-t pt-3" style={{ borderColor: "color-mix(in srgb, var(--color-border) 60%, transparent)" }}>
+      <div className="mt-auto flex flex-wrap gap-1.5 border-t pt-3" style={{ borderColor: "color-mix(in srgb, var(--color-border) 60%, transparent)" }}>
         {branch.phones.map((phone) => (
           <a
             key={phone}
             href={telHref(phone)}
             onClick={(e) => e.stopPropagation()}
             aria-label={`${branch.name} শাখায় কল করুন ${phone}`}
-            className="tap inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition-colors hover:!bg-[var(--color-brand-primary)] hover:!text-white"
+            className="tap inline-flex min-w-0 items-center gap-1 rounded-full px-2 py-1.5 text-xs font-medium transition-colors hover:!bg-[var(--color-brand-primary)] hover:!text-white"
             style={{ background: "color-mix(in srgb, var(--color-brand-primary) 8%, transparent)", color: "var(--color-brand-primary)" }}
           >
             <span className="material-symbols-rounded" aria-hidden style={{ fontSize: 14 }}>
@@ -74,7 +74,6 @@ function BranchCard({ branch, division }: { branch: Branch; division: Division }
 
 export default function BranchesPage() {
   const [query, setQuery] = useState("");
-  const [openDivision, setOpenDivision] = useState<string | null>(null);
   const [mobileTab, setMobileTab] = useState<string | null>(null);
 
   const totalBranches = DIVISIONS.reduce((sum, d) => sum + d.branches.length, 0);
@@ -98,7 +97,7 @@ export default function BranchesPage() {
       <AppHeader />
       <main className="flex-1 px-4 pb-6">
        <PullToRefresh>
-        <div className="relative mt-3 aspect-[2172/724] w-full overflow-hidden rounded-[8px]">
+        <div className="relative mt-3 aspect-[2172/724] w-full overflow-hidden rounded-[8px] lg:aspect-auto lg:h-[165px]">
           <Image
             src="/branches-banner-v3.png"
             alt={`আপনার কাছে সবচেয়ে কাছে উদ্ভাস-উন্মেষ, সারা দেশে ${totalBranches}+ শাখা`}
@@ -121,74 +120,7 @@ export default function BranchesPage() {
           />
         </div>
 
-        <div className="hidden md:block">
-          {q ? (
-            <div className="mt-6 flex flex-col gap-8">
-              {filtered.map((division) => (
-                <section key={division.slug} aria-label={division.name}>
-                  <h2 className="mb-3 text-sm font-semibold text-[var(--color-text-primary)]">
-                    {division.name} <span className="font-normal text-[var(--color-text-secondary)]">· {division.branches.length}টি শাখা</span>
-                  </h2>
-                  <div className="grid grid-cols-2 gap-3 lg:grid-cols-3">
-                    {division.branches.map((branch) => (
-                      <BranchCard key={branch.name} branch={branch} division={division} />
-                    ))}
-                  </div>
-                </section>
-              ))}
-              {filtered.length === 0 && (
-                <p className="py-8 text-center text-sm text-[var(--color-text-secondary)]">কোনো শাখা পাওয়া যায়নি।</p>
-              )}
-            </div>
-          ) : (
-            <>
-              <div className="mt-5 grid grid-cols-4 gap-3" role="tablist" aria-label="বিভাগ">
-                {DIVISIONS.map((division) => {
-                  const active = (openDivision ?? DIVISIONS[0].slug) === division.slug;
-                  return (
-                    <button
-                      key={division.slug}
-                      type="button"
-                      role="tab"
-                      aria-selected={active}
-                      onClick={() => setOpenDivision(division.slug)}
-                      className="tap flex items-center gap-2.5 rounded-[var(--radius-lg)] border px-3 py-2.5 text-left transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-brand-primary)]"
-                      style={{
-                        borderColor: active ? "var(--color-brand-primary)" : "var(--color-border)",
-                        background: active
-                          ? "color-mix(in srgb, var(--color-brand-primary) 6%, var(--color-surface))"
-                          : "var(--color-surface)",
-                        boxShadow: active ? "none" : "var(--shadow-subtle)",
-                      }}
-                    >
-                      <span className="min-w-0 flex-1">
-                        <span className="block truncate text-sm font-semibold leading-snug text-[var(--color-text-primary)]">{division.name}</span>
-                        <span className="block text-xs leading-snug text-[var(--color-text-secondary)]">{division.branches.length}টি শাখা</span>
-                      </span>
-                    </button>
-                  );
-                })}
-              </div>
-              {(() => {
-                const division = DIVISIONS.find((d) => d.slug === (openDivision ?? DIVISIONS[0].slug)) ?? DIVISIONS[0];
-                return (
-                  <section className="mt-6" role="tabpanel" aria-label={division.name}>
-                    <h2 className="mb-3 text-sm font-semibold text-[var(--color-text-primary)]">
-                      {division.name} <span className="font-normal text-[var(--color-text-secondary)]">· {division.branches.length}টি শাখা</span>
-                    </h2>
-                    <div className="grid grid-cols-2 gap-3 lg:grid-cols-3">
-                      {division.branches.map((branch) => (
-                        <BranchCard key={branch.name} branch={branch} division={division} />
-                      ))}
-                    </div>
-                  </section>
-                );
-              })()}
-            </>
-          )}
-        </div>
-
-        <div className="mt-5 md:hidden">
+        <div className="mt-5">
           <DragScroll
             tag="div"
             role="tablist"
@@ -239,7 +171,7 @@ export default function BranchesPage() {
                 <p className="mb-3 mt-4 text-sm font-medium text-[var(--color-brand-primary)]">
                   {branchCount}টি শাখা পাওয়া গেছে
                 </p>
-                <div className="flex flex-col gap-3">
+                <div className="flex flex-col gap-3 md:grid md:grid-cols-2 lg:grid-cols-3">
                   {tabFiltered.map((division) =>
                     division.branches.map((branch) => (
                       <BranchCard key={`${division.slug}-${branch.name}`} branch={branch} division={division} />

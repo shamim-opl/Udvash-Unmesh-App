@@ -1,5 +1,3 @@
-"use client";
-
 import Link from "next/link";
 import AppHeader from "@/components/AppHeader";
 import BackButton from "@/components/BackButton";
@@ -16,27 +14,19 @@ export default function FreeCoursesPage() {
       </header>
 
       <main className="flex-1 px-4 pb-6">
-        <h2 className="mb-4 text-sm font-normal text-[var(--color-text-secondary)]">শ্রেণি নির্বাচন করুন</h2>
+        <p className="mt-2 text-sm text-[var(--color-text-secondary)]">নিজের ক্লাস বেছে নাও, সেখান থেকেই শুরু হবে তোমার ফ্রি কোর্স</p>
 
-        <div className="grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-4">
+        <div className="mt-4 grid grid-cols-[repeat(auto-fill,minmax(96px,1fr))] gap-3 lg:grid-cols-5">
           {CLASS_LEVELS.map((c) => (
             <Link
               key={c.slug}
               href={`/free-courses/${c.slug}`}
-              className="tap flex flex-col items-center gap-2 rounded-[var(--radius-lg)] border bg-[var(--color-surface)] px-2 py-4 text-center transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-brand-primary)]"
+              className="tap flex flex-col items-center gap-2 rounded-[var(--radius-lg)] border bg-[var(--color-surface)] px-2 py-5 text-center transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-brand-primary)]"
               style={{ borderColor: "color-mix(in srgb, var(--color-border) 50%, transparent)", boxShadow: "var(--shadow-subtle)" }}
             >
-              <span className="relative flex h-11 w-11 items-center justify-center rounded-full">
-                <span className="absolute inset-0 rounded-full" style={{ background: c.bg, opacity: "var(--icon-bg-opacity)" }} />
-                <span className="material-symbols-rounded relative" style={{ fontSize: 20, color: c.color }}>
-                  menu_book
-                </span>
-              </span>
-              <span className="flex items-center gap-0.5 text-sm font-semibold text-[var(--color-text-primary)]">
-                {c.label}
-                <span className="material-symbols-rounded" style={{ fontSize: 14, color: "var(--color-text-secondary)" }}>
-                  chevron_right
-                </span>
+              <span className="relative flex h-[82px] w-[82px] items-center justify-center rounded-full text-center font-bold" style={{ color: c.color }}>
+                <span className="absolute inset-0 rounded-full" style={{ background: c.color, opacity: "var(--icon-bg-opacity)" }} />
+                <span className="relative text-xs leading-tight">{c.enLabel}</span>
               </span>
             </Link>
           ))}

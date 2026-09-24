@@ -3,7 +3,7 @@ import Image from "next/image";
 export default function HeroBanner() {
   return (
     <div className="mt-4 px-4">
-      <div className="relative aspect-[1870/931] w-full overflow-hidden rounded-[12px]">
+      <div className="relative aspect-[1870/931] w-full overflow-hidden rounded-[12px] lg:aspect-auto lg:h-[325px]">
         <Image src="/hero-banner-v8.webp" alt="সম্পর্ক হোক সহযোগিতার — উদ্ভাস-উন্মেষ শিক্ষা পরিবার" fill className="object-cover" priority />
         <span
           aria-hidden

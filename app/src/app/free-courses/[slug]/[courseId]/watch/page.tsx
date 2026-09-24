@@ -5,27 +5,29 @@ import { useParams, useRouter } from "next/navigation";
 import AppHeader from "@/components/AppHeader";
 import BackButton from "@/components/BackButton";
 import BottomNav from "@/components/BottomNav";
-import { CLASS_LEVELS, FREE_COURSES, formatDuration } from "@/data/freeCourses";
+import { CLASS_LEVELS, findFreeCourse, formatDuration } from "@/data/freeCourses";
 
-function readCompleted(slug: string): number[] {
+function readCompleted(key: string): number[] {
   try {
-    return JSON.parse(localStorage.getItem(`completedLessons_${slug}`) ?? "[]");
+    return JSON.parse(localStorage.getItem(`completedLessons_${key}`) ?? "[]");
   } catch {
     return [];
   }
 }
 
-function saveCompleted(slug: string, completed: number[]) {
-  localStorage.setItem(`completedLessons_${slug}`, JSON.stringify(completed));
+function saveCompleted(key: string, completed: number[]) {
+  localStorage.setItem(`completedLessons_${key}`, JSON.stringify(completed));
 }
 
 export default function WatchCoursePage() {
-  const params = useParams<{ slug: string }>();
+  const params = useParams<{ slug: string; courseId: string }>();
   const router = useRouter();
   const slug = params.slug;
+  const courseId = params.courseId;
+  const enrollKey = `${slug}/${courseId}`;
 
   const classLevel = CLASS_LEVELS.find((c) => c.slug === slug);
-  const course = FREE_COURSES[slug];
+  const course = findFreeCourse(slug, courseId);
 
   const [activeLesson, setActiveLesson] = useState(0);
   const [playing, setPlaying] = useState(false);
@@ -41,8 +43,8 @@ export default function WatchCoursePage() {
   const playerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (slug) setCompleted(readCompleted(slug));
-  }, [slug]);
+    if (slug) setCompleted(readCompleted(enrollKey));
+  }, [enrollKey, slug]);
 
   const durationSec = course?.lessons[activeLesson]?.durationSec ?? 0;
 
@@ -60,7 +62,7 @@ export default function WatchCoursePage() {
           setCompleted((c) => {
             if (c.includes(activeLesson)) return c;
             const updated = [...c, activeLesson];
-            saveCompleted(slug, updated);
+            saveCompleted(enrollKey, updated);
             return updated;
           });
           return durationSec;
@@ -71,7 +73,7 @@ export default function WatchCoursePage() {
     return () => {
       if (intervalRef.current) clearInterval(intervalRef.current);
     };
-  }, [playing, seeking, activeLesson, slug, durationSec]);
+  }, [playing, seeking, activeLesson, enrollKey, durationSec]);
 
   // auto-hide the control bar a couple seconds after playback starts
   useEffect(() => {
@@ -162,7 +164,7 @@ export default function WatchCoursePage() {
     <>
       <AppHeader />
       <header className="relative mb-2 flex items-center justify-center gap-3 px-4 py-3">
-        <span className="absolute left-4 lg:left-8"><BackButton href={`/free-courses/${slug}`} /></span>
+        <span className="absolute left-4 lg:left-8"><BackButton href={`/free-courses/${slug}/${courseId}`} /></span>
         <h1 className="font-heading truncate text-[18px] font-semibold leading-none text-[#616161]">{course.title}</h1>
       </header>
 

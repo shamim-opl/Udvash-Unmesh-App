@@ -8,6 +8,8 @@ export type ProgramCategory =
   | "Cadet"
   | "Text";
 
+export type ClassLevelSlug = "5" | "6" | "7" | "8" | "9" | "10" | "11" | "12" | "model-test" | "admission";
+
 export type Program = {
   id: string;
   title: string;
@@ -16,7 +18,25 @@ export type Program = {
   startsAt?: string;
   gradient: [string, string];
   image?: string;
+  /** Which "pick your class" chips this program shows up under. */
+  classLevels: ClassLevelSlug[];
+  /** True for a genuinely free program. Every program currently in this list is a real
+   * paid batch, so this is always false/omitted here — no free entries are invented. */
+  free?: boolean;
 };
+
+export const CLASS_CHIPS: { slug: ClassLevelSlug; label: string }[] = [
+  { slug: "5", label: "Five" },
+  { slug: "6", label: "Six" },
+  { slug: "7", label: "Seven" },
+  { slug: "8", label: "Eight" },
+  { slug: "9", label: "Nine" },
+  { slug: "10", label: "Ten" },
+  { slug: "11", label: "Eleven" },
+  { slug: "12", label: "Twelve" },
+  { slug: "model-test", label: "Model Test" },
+  { slug: "admission", label: "Admission" },
+];
 
 // Source of truth: https://udvash.com/Program (scraped titles, start dates, and mode tags)
 export const PROGRAMS: Program[] = [
@@ -27,6 +47,7 @@ export const PROGRAMS: Program[] = [
     modes: ["Offline", "Online"],
     gradient: ["#3949AB", "#1A237E"],
     image: "https://udvash-unmesh.com/media/Images/Udvash/program/2026/ParallalText1.png",
+    classLevels: ["6", "7", "8", "9", "10", "11", "12"],
   },
   {
     id: "engineering-admission-2026",
@@ -36,6 +57,7 @@ export const PROGRAMS: Program[] = [
     startsAt: "১৭ আগস্ট, ২০২৬",
     gradient: ["#E53935", "#8E1526"],
     image: "https://udvash-unmesh.com/media/Images/Udvash/program/2026/ap26/EAP26OfOn.jpeg",
+    classLevels: ["admission"],
   },
   {
     id: "medical-admission-2026",
@@ -45,6 +67,7 @@ export const PROGRAMS: Program[] = [
     startsAt: "১৬ আগস্ট, ২০২৬",
     gradient: ["#00897B", "#004D40"],
     image: "https://udvash-unmesh.com/media/Images/Udvash/program/2026/ap26/MAP26OfOn.jpeg",
+    classLevels: ["admission"],
   },
   {
     id: "varsity-a-guccho-2026",
@@ -54,6 +77,7 @@ export const PROGRAMS: Program[] = [
     startsAt: "অফলাইন- ১৭ আগস্ট, অনলাইন- ১৮ আগস্ট, ২০২৬",
     gradient: ["#1E88E5", "#0D47A1"],
     image: "https://udvash-unmesh.com/media/Images/Udvash/program/2026/ap26/VAPKa26OfOn.jpeg",
+    classLevels: ["admission"],
   },
   {
     id: "varsity-b-guccho-2026",
@@ -63,6 +87,7 @@ export const PROGRAMS: Program[] = [
     startsAt: "অফলাইন- ১৭ আগস্ট, অনলাইন- ১৮ আগস্ট, ২০২৬",
     gradient: ["#8E24AA", "#4A148C"],
     image: "https://udvash-unmesh.com/media/Images/Udvash/program/2026/ap26/VAPKha26OfOn.jpeg",
+    classLevels: ["admission"],
   },
   {
     id: "2nd-time-medical-2026",
@@ -71,6 +96,7 @@ export const PROGRAMS: Program[] = [
     modes: ["Offline"],
     startsAt: "২৩ জানুয়ারি, ২০২৬",
     gradient: ["#00897B", "#004D40"],
+    classLevels: ["admission"],
   },
   {
     id: "engineering-admission-2027-dp",
@@ -79,6 +105,7 @@ export const PROGRAMS: Program[] = [
     modes: ["Offline", "Combo"],
     startsAt: "১৭ আগস্ট, ২০২৬",
     gradient: ["#E53935", "#8E1526"],
+    classLevels: ["admission"],
   },
   {
     id: "medical-admission-2027-dp",
@@ -87,6 +114,7 @@ export const PROGRAMS: Program[] = [
     modes: ["Offline", "Combo"],
     startsAt: "১৬ আগস্ট, ২০২৬",
     gradient: ["#00897B", "#004D40"],
+    classLevels: ["admission"],
   },
   {
     id: "varsity-a-2027-dp",
@@ -95,6 +123,7 @@ export const PROGRAMS: Program[] = [
     modes: ["Offline", "Combo"],
     startsAt: "১৮ আগস্ট, ২০২৬",
     gradient: ["#1E88E5", "#0D47A1"],
+    classLevels: ["admission"],
   },
   {
     id: "varsity-b-2027-dp",
@@ -103,6 +132,7 @@ export const PROGRAMS: Program[] = [
     modes: ["Offline", "Combo"],
     startsAt: "১৮ আগস্ট, ২০২৬",
     gradient: ["#8E24AA", "#4A148C"],
+    classLevels: ["admission"],
   },
   {
     id: "ssc-dakhil-2027-revision",
@@ -111,6 +141,7 @@ export const PROGRAMS: Program[] = [
     modes: ["Offline", "Online"],
     startsAt: "১ আগস্ট, ২০২৬",
     gradient: ["#F4511E", "#BF360C"],
+    classLevels: ["9", "10"],
   },
   {
     id: "ssc-2027-model-test",
@@ -119,6 +150,7 @@ export const PROGRAMS: Program[] = [
     modes: ["Offline", "Online"],
     startsAt: "টেস্ট পরীক্ষার পর",
     gradient: ["#6D4C41", "#3E2723"],
+    classLevels: ["9", "10", "model-test"],
   },
   {
     id: "cadet-ssc-2027-model-test",
@@ -127,6 +159,7 @@ export const PROGRAMS: Program[] = [
     modes: ["Offline", "Online"],
     startsAt: "১৪ সেপ্টেম্বর, ২০২৬",
     gradient: ["#3949AB", "#1A237E"],
+    classLevels: ["9", "10", "model-test"],
   },
   {
     id: "2nd-time-varsity-a-2026",
@@ -135,6 +168,7 @@ export const PROGRAMS: Program[] = [
     modes: ["Offline"],
     startsAt: "২৬ এপ্রিল, ২০২৬",
     gradient: ["#1E88E5", "#0D47A1"],
+    classLevels: ["admission"],
   },
   {
     id: "2nd-time-varsity-b-2026",
@@ -143,6 +177,7 @@ export const PROGRAMS: Program[] = [
     modes: ["Offline"],
     startsAt: "২৫ এপ্রিল, ২০২৬",
     gradient: ["#8E24AA", "#4A148C"],
+    classLevels: ["admission"],
   },
   {
     id: "hsc28-1st-year-prime",
@@ -151,6 +186,7 @@ export const PROGRAMS: Program[] = [
     modes: ["Offline"],
     startsAt: "৬ সেপ্টেম্বর, ২০২৬",
     gradient: ["#00ACC1", "#006064"],
+    classLevels: ["11"],
   },
   {
     id: "hsc27-2nd-year-progressive",
@@ -158,6 +194,7 @@ export const PROGRAMS: Program[] = [
     category: "HSC",
     modes: ["Offline", "Online/Combo"],
     gradient: ["#00ACC1", "#006064"],
+    classLevels: ["12"],
   },
   {
     id: "hsc-ict-advanced",
@@ -166,6 +203,7 @@ export const PROGRAMS: Program[] = [
     modes: ["Offline"],
     startsAt: "২৬ জুন, ২০২৬",
     gradient: ["#00ACC1", "#006064"],
+    classLevels: ["11", "12"],
   },
   {
     id: "hsc-full-course",
@@ -174,6 +212,7 @@ export const PROGRAMS: Program[] = [
     modes: ["Offline", "Combo/Online"],
     startsAt: "২৬ জুন, ২০২৬",
     gradient: ["#00ACC1", "#006064"],
+    classLevels: ["11", "12"],
   },
   {
     id: "cadet-college-model-test-2027",
@@ -182,6 +221,7 @@ export const PROGRAMS: Program[] = [
     modes: ["Offline"],
     startsAt: "৩ অক্টোবর, ২০২৬",
     gradient: ["#3949AB", "#1A237E"],
+    classLevels: ["7", "8", "model-test"],
   },
   {
     id: "class8-junior-britti-2026",
@@ -190,6 +230,7 @@ export const PROGRAMS: Program[] = [
     modes: ["Offline"],
     startsAt: "১ অক্টোবর, ২০২৬",
     gradient: ["#FB8C00", "#E65100"],
+    classLevels: ["8"],
   },
   {
     id: "class5-math-olympiad-2026",
@@ -198,6 +239,7 @@ export const PROGRAMS: Program[] = [
     modes: ["Offline"],
     startsAt: "১৮ সেপ্টেম্বর, ২০২৬",
     gradient: ["#FB8C00", "#E65100"],
+    classLevels: ["5"],
   },
   {
     id: "class5-provinces-britti-2026",
@@ -206,6 +248,7 @@ export const PROGRAMS: Program[] = [
     modes: ["Offline"],
     startsAt: "৯ অক্টোবর, ২০২৬",
     gradient: ["#FB8C00", "#E65100"],
+    classLevels: ["5"],
   },
   {
     id: "hsc-alim-2027-revision",
@@ -213,6 +256,7 @@ export const PROGRAMS: Program[] = [
     category: "HSC",
     modes: ["Offline"],
     gradient: ["#00ACC1", "#006064"],
+    classLevels: ["11", "12"],
   },
   {
     id: "hsc28-1st-year-pioneer",
@@ -220,6 +264,7 @@ export const PROGRAMS: Program[] = [
     category: "HSC",
     modes: ["Offline"],
     gradient: ["#00ACC1", "#006064"],
+    classLevels: ["11"],
   },
   {
     id: "hsc-2027-model-test",
@@ -228,6 +273,7 @@ export const PROGRAMS: Program[] = [
     modes: ["Offline", "Online"],
     startsAt: "টেস্ট পরীক্ষার পরে",
     gradient: ["#6D4C41", "#3E2723"],
+    classLevels: ["11", "12", "model-test"],
   },
   {
     id: "hsc28-1st-year-progressive-2026",
@@ -235,6 +281,7 @@ export const PROGRAMS: Program[] = [
     category: "HSC",
     modes: ["Offline", "Combo/Online"],
     gradient: ["#00ACC1", "#006064"],
+    classLevels: ["11"],
   },
   {
     id: "hsc28-ict-progressive",
@@ -243,6 +290,7 @@ export const PROGRAMS: Program[] = [
     modes: ["Offline"],
     startsAt: "কলেজ শুরুর পর",
     gradient: ["#00ACC1", "#006064"],
+    classLevels: ["11", "12"],
   },
   {
     id: "hsc28-full-course-progressive",
@@ -251,6 +299,7 @@ export const PROGRAMS: Program[] = [
     modes: ["Offline", "Combo/Online"],
     startsAt: "কলেজ শুরুর পর",
     gradient: ["#00ACC1", "#006064"],
+    classLevels: ["11", "12"],
   },
   {
     id: "class6-academic-progressive-2026",
@@ -259,6 +308,7 @@ export const PROGRAMS: Program[] = [
     modes: ["Offline"],
     startsAt: "১০ এপ্রিল, ২০২৬",
     gradient: ["#43A047", "#1B5E20"],
+    classLevels: ["6"],
   },
   {
     id: "class7-academic-progressive-2026",
@@ -267,6 +317,7 @@ export const PROGRAMS: Program[] = [
     modes: ["Offline"],
     startsAt: "১০ এপ্রিল, ২০২৬",
     gradient: ["#43A047", "#1B5E20"],
+    classLevels: ["7"],
   },
   {
     id: "class8-academic-progressive-2026",
@@ -275,6 +326,7 @@ export const PROGRAMS: Program[] = [
     modes: ["Offline"],
     startsAt: "১০ এপ্রিল, ২০২৬",
     gradient: ["#43A047", "#1B5E20"],
+    classLevels: ["8"],
   },
   {
     id: "class9-academic-progressive-2026",
@@ -283,6 +335,7 @@ export const PROGRAMS: Program[] = [
     modes: ["Offline"],
     startsAt: "১০ এপ্রিল, ২০২৬",
     gradient: ["#43A047", "#1B5E20"],
+    classLevels: ["9"],
   },
   {
     id: "class9-full-course-2026-new",
@@ -291,6 +344,7 @@ export const PROGRAMS: Program[] = [
     modes: ["Offline"],
     startsAt: "১৭ এপ্রিল, ২০২৬",
     gradient: ["#43A047", "#1B5E20"],
+    classLevels: ["9"],
   },
   {
     id: "class10-academic-progressive-2026",
@@ -299,6 +353,7 @@ export const PROGRAMS: Program[] = [
     modes: ["Offline"],
     startsAt: "১০ এপ্রিল, ২০২৬",
     gradient: ["#43A047", "#1B5E20"],
+    classLevels: ["10"],
   },
   {
     id: "class10-full-course-2026-new",
@@ -307,6 +362,7 @@ export const PROGRAMS: Program[] = [
     modes: ["Offline"],
     startsAt: "১৭ এপ্রিল, ২০২৬",
     gradient: ["#43A047", "#1B5E20"],
+    classLevels: ["10"],
   },
   {
     id: "cadet-college-2027",
@@ -315,6 +371,7 @@ export const PROGRAMS: Program[] = [
     modes: ["Offline"],
     startsAt: "১০ জানুয়ারি, ২০২৬",
     gradient: ["#3949AB", "#1A237E"],
+    classLevels: ["6", "7"],
   },
   {
     id: "hsc27-2nd-year-pioneer",
@@ -322,6 +379,7 @@ export const PROGRAMS: Program[] = [
     category: "HSC",
     modes: ["Offline"],
     gradient: ["#00ACC1", "#006064"],
+    classLevels: ["12"],
   },
   {
     id: "class6-academic-pioneer-2026",
@@ -330,6 +388,7 @@ export const PROGRAMS: Program[] = [
     modes: ["Offline"],
     startsAt: "১৭ জানুয়ারি, ২০২৬",
     gradient: ["#43A047", "#1B5E20"],
+    classLevels: ["6"],
   },
   {
     id: "class7-academic-pioneer-2026",
@@ -338,6 +397,7 @@ export const PROGRAMS: Program[] = [
     modes: ["Offline"],
     startsAt: "১৭ জানুয়ারি, ২০২৬",
     gradient: ["#43A047", "#1B5E20"],
+    classLevels: ["7"],
   },
   {
     id: "class8-academic-pioneer-2026",
@@ -346,6 +406,7 @@ export const PROGRAMS: Program[] = [
     modes: ["Offline"],
     startsAt: "১৭ জানুয়ারি, ২০২৬",
     gradient: ["#43A047", "#1B5E20"],
+    classLevels: ["8"],
   },
   {
     id: "class9-academic-pioneer-2026",
@@ -354,6 +415,7 @@ export const PROGRAMS: Program[] = [
     modes: ["Offline", "Combo/Online"],
     startsAt: "১৭ জানুয়ারি, ২০২৬",
     gradient: ["#43A047", "#1B5E20"],
+    classLevels: ["9"],
   },
   {
     id: "class9-full-course-2026",
@@ -362,6 +424,7 @@ export const PROGRAMS: Program[] = [
     modes: ["Offline", "Combo/Online"],
     startsAt: "১৭ জানুয়ারি, ২০২৬",
     gradient: ["#43A047", "#1B5E20"],
+    classLevels: ["9"],
   },
   {
     id: "class10-academic-pioneer-2026",
@@ -370,6 +433,7 @@ export const PROGRAMS: Program[] = [
     modes: ["Offline", "Combo/Online"],
     startsAt: "১৭ জানুয়ারি, ২০২৬",
     gradient: ["#43A047", "#1B5E20"],
+    classLevels: ["10"],
   },
   {
     id: "class10-full-course-2026",
@@ -378,6 +442,7 @@ export const PROGRAMS: Program[] = [
     modes: ["Offline", "Combo/Online"],
     startsAt: "১৭ জানুয়ারি, ২০২৬",
     gradient: ["#43A047", "#1B5E20"],
+    classLevels: ["10"],
   },
 ];
 

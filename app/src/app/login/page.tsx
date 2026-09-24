@@ -150,7 +150,8 @@ export default function LoginPage() {
   const [step, setStep] = useState<Step>("role");
   const [role, setRole] = useState<Role | null>(null);
 
-  const [loginId, setLoginId] = useState("");
+  const [loginId, setLoginId] = useState(() => (typeof window === "undefined" ? "" : localStorage.getItem("rememberedLoginId") ?? ""));
+  const [rememberMe, setRememberMe] = useState(() => (typeof window === "undefined" ? false : Boolean(localStorage.getItem("rememberedLoginId"))));
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loginError, setLoginError] = useState("");
@@ -306,9 +307,23 @@ export default function LoginPage() {
             <CardTitle title={`${roleInfo.label} Login`} sub="Enter registration number or mobile" />
             <FieldLabel>Registration No. / Mobile</FieldLabel>
             <TextField value={loginId} onChange={setLoginId} placeholder="e.g. 1234567 or 01XXXXXXXXX" />
+            <label className="mb-4 flex items-center gap-2 text-sm text-[var(--color-text-primary)]">
+              <input
+                type="checkbox"
+                checked={rememberMe}
+                onChange={(e) => setRememberMe(e.target.checked)}
+                className="h-4 w-4 accent-[var(--color-brand-primary)]"
+              />
+              Remember me
+            </label>
             <CardButton
               disabled={!loginId}
               onClick={() => {
+                if (rememberMe) {
+                  localStorage.setItem("rememberedLoginId", loginId);
+                } else {
+                  localStorage.removeItem("rememberedLoginId");
+                }
                 const existing = findProfileByIdentifier(loginId);
                 setFoundProfile(existing);
                 setStep("loginPassword");

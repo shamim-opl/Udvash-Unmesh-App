@@ -24,13 +24,13 @@ export default function ServiceCard({
         <span className="absolute inset-0 rounded-full" style={{ background: iconBg, opacity: "var(--icon-bg-opacity)" }} />
         <span className="relative flex items-center justify-center">{icon}</span>
       </span>
-      <span className="flex-1">
-        <span className="block text-2xl font-semibold text-[var(--color-text-primary)]">
+      <span className="min-w-0 flex-1">
+        <span className="block truncate text-2xl font-semibold text-[var(--color-text-primary)]">
           {title}
         </span>
         <span className="mt-1.5 block text-sm text-[var(--color-text-secondary)]">{subtitle}</span>
       </span>
-      <span className="material-symbols-rounded" style={{ fontSize: 16, color: "var(--color-text-secondary)" }}>
+      <span className="material-symbols-rounded shrink-0" style={{ fontSize: 16, color: "var(--color-text-secondary)" }}>
         arrow_forward_ios
       </span>
     </Link>

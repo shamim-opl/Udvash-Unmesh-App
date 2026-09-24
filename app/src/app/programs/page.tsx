@@ -1,292 +1,53 @@
-"use client";
-
-import { useState } from "react";
+import Link from "next/link";
 import AppHeader from "@/components/AppHeader";
 import BackButton from "@/components/BackButton";
 import BottomNav from "@/components/BottomNav";
-import PullToRefresh from "@/components/PullToRefresh";
-import { PROGRAMS, PROGRAM_CATEGORIES, type ProgramCategory } from "@/data/programs";
+import { CLASS_CHIPS } from "@/data/programs";
 
-const CATEGORY_ICON: Record<ProgramCategory, string> = {
-  Admission: "school",
-  HSC: "menu_book",
-  SSC: "menu_book",
-  Academic: "auto_stories",
-  "Model Test": "quiz",
-  Scholarship: "military_tech",
-  Cadet: "shield",
-  Text: "import_contacts",
+const CHIP_COLORS: Record<string, string> = {
+  "5": "#00ACC1",
+  "6": "#1E88E5",
+  "7": "#43A047",
+  "8": "#FB8C00",
+  "9": "#00897B",
+  "10": "#8E24AA",
+  "11": "#3949AB",
+  "12": "#8D6E63",
+  "model-test": "#6D4C41",
+  admission: "#E53935",
 };
 
-const MODES = ["All", "Offline", "Online", "Combo"] as const;
-type ModeFilter = (typeof MODES)[number];
-
-const CATEGORY_HIGHLIGHTS: Record<ProgramCategory, string[]> = {
-  Admission: ["বাংলা ও ইংলিশ ভার্সন", "টপিকভিত্তিক ফাউন্ডেশন ক্লাস", "স্ট্যান্ডার্ড এক্সাম ও Q&A সাপোর্ট"],
-  HSC: ["বিষয়ভিত্তিক কনসেপ্ট ক্লাস", "লাইভ ও রেকর্ডেড ক্লাস সুবিধা", "MCQ ও CQ এক্সাম সাপোর্ট"],
-  SSC: ["বাংলা ও ইংলিশ ভার্সন", "বোর্ড স্ট্যান্ডার্ড প্রস্তুতি", "MCQ ও CQ প্র্যাকটিস"],
-  Academic: ["বিষয়ভিত্তিক প্যারালাল টেক্সট", "লাইভ ক্লাস ও রেকর্ডেড ভিডিও", "নিয়মিত পরীক্ষা ও সমাধান"],
-  "Model Test": ["বিষয়ভিত্তিক প্রশ্নব্যাংক", "বোর্ড স্ট্যান্ডার্ড মডেল টেস্ট", "পরীক্ষাভিত্তিক সলভ শিট"],
-  Scholarship: ["শিক্ষার্থীদের জন্য বিশেষ আয়োজন", "বিষয়ভিত্তিক পরীক্ষা ও প্রশ্নব্যাংক", "মেধাবৃত্তি ও পুরস্কারের সুযোগ"],
-  Cadet: ["বাংলা ও ইংলিশ ভার্সন", "অভিজ্ঞ শিক্ষকের প্রস্তুতি ক্লাস", "মডেল টেস্ট ও সলভ সাপোর্ট"],
-  Text: ["দৃঢ় বেসিক গঠনে কনসেপ্ট আলোচনা", "বাস্তব উদাহরণ ও চিত্রসহ ব্যাখ্যা", "বোর্ড ও এডমিশন প্রশ্ন-সমাধান"],
-};
-
-export default function ProgramsPage() {
-  const [query, setQuery] = useState("");
-  const [category, setCategory] = useState<"All" | ProgramCategory>("All");
-  const [mode, setMode] = useState<ModeFilter>("All");
-  const [filterOpen, setFilterOpen] = useState(false);
-
-  const q = query.trim().toLowerCase();
-  const filtered = PROGRAMS.filter((p) => {
-    const matchesCategory = category === "All" || p.category === category;
-    const matchesMode = mode === "All" || p.modes.some((m) => m.includes(mode));
-    const matchesQuery = !q || p.title.toLowerCase().includes(q);
-    return matchesCategory && matchesMode && matchesQuery;
-  });
-
-  const filtersActive = category !== "All" || mode !== "All";
-
+export default function ProgramsPickClassPage() {
   return (
     <>
       <AppHeader />
       <header className="relative mb-2 flex items-center justify-center gap-3 px-4 py-3">
         <span className="absolute left-4 lg:left-8"><BackButton href="/" /></span>
-        <h1 className="font-heading text-[18px] font-semibold leading-none text-[#616161]">প্রোগ্রামসমূহ</h1>
+        <h1 className="font-heading text-[18px] font-semibold leading-none text-[#616161]">আমাদের প্রোগ্রামসমূহ</h1>
       </header>
 
       <main className="flex-1 px-4 pb-6">
-       <PullToRefresh>
-        <div className="flex items-center gap-2">
-          <div className="flex flex-1 items-center gap-2 rounded-[5px] border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2.5 transition-colors duration-150 ease-out has-[:focus-visible]:border-[var(--color-brand-primary)]">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--color-text-secondary)" strokeWidth="2">
-              <circle cx="11" cy="11" r="7" />
-              <path d="M21 21l-4.35-4.35" strokeLinecap="round" />
-            </svg>
-            <input
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="কোর্স বা প্রোগ্রাম খুঁজুন..."
-              className="w-full bg-transparent text-sm text-[var(--color-text-primary)] outline-none placeholder:text-[var(--color-text-secondary)]"
-            />
-          </div>
-          <button
-            type="button"
-            onClick={() => setFilterOpen((v) => !v)}
-            aria-label="ফিল্টার"
-            aria-expanded={filterOpen}
-            className="tap relative flex h-10 w-10 shrink-0 items-center justify-center rounded-[5px] border"
-            style={
-              filterOpen || mode !== "All"
-                ? { background: "var(--color-brand-primary)", borderColor: "var(--color-brand-primary)" }
-                : { background: "var(--color-surface)", borderColor: "var(--color-border)" }
-            }
-          >
-            <span
-              className="material-symbols-rounded"
-              style={{ fontSize: 18, color: filterOpen || mode !== "All" ? "white" : "var(--color-text-secondary)" }}
+        <p className="mt-2 text-sm text-[var(--color-text-secondary)]">নিজের ক্লাস বেছে নাও, পছন্দের প্রোগ্রাম যুক্ত করো তোমার পোর্টালে</p>
+
+        <div className="mt-4 grid grid-cols-[repeat(auto-fill,minmax(96px,1fr))] gap-3 lg:grid-cols-5">
+          {CLASS_CHIPS.map((c) => (
+            <Link
+              key={c.slug}
+              href={`/programs/${c.slug}`}
+              className="tap flex flex-col items-center gap-2 rounded-[var(--radius-lg)] border bg-[var(--color-surface)] px-2 py-5 text-center transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-brand-primary)]"
+              style={{ borderColor: "color-mix(in srgb, var(--color-border) 50%, transparent)", boxShadow: "var(--shadow-subtle)" }}
             >
-              tune
-            </span>
-            {mode !== "All" && (
-              <span
-                aria-hidden
-                className="absolute -right-1 -top-1 h-2.5 w-2.5 rounded-full border-2"
-                style={{ background: "var(--color-warning)", borderColor: "var(--color-bg-canvas)" }}
-              />
-            )}
-          </button>
-        </div>
-
-        {filterOpen && (
-          <div className="animate-dropdown-in mt-3 rounded-[5px] border border-[var(--color-border)] bg-[var(--color-surface)] p-3">
-            <p className="mb-2 text-xs font-semibold text-[var(--color-text-secondary)]">ক্লাস মোড</p>
-            <div className="flex flex-wrap gap-2">
-              {MODES.map((m) => {
-                const active = mode === m;
-                return (
-                  <button
-                    key={m}
-                    type="button"
-                    onClick={() => setMode(m)}
-                    className="tap rounded-full px-4 py-2.5 text-xs font-semibold"
-                    style={
-                      active
-                        ? { background: "var(--color-brand-primary)", color: "white" }
-                        : { background: "var(--color-bg-canvas)", color: "var(--color-text-secondary)", border: "1px solid var(--color-border)" }
-                    }
-                  >
-                    {m === "All" ? "সব" : m}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-        )}
-
-        <div className="mt-3 flex items-center justify-between">
-          <p className="text-xs text-[var(--color-text-secondary)]">{filtered.length} টি প্রোগ্রাম পাওয়া গেছে</p>
-          {filtersActive && (
-            <button
-              type="button"
-              onClick={() => {
-                setCategory("All");
-                setMode("All");
-              }}
-              className="tap flex items-center gap-0.5 text-xs font-semibold"
-              style={{ color: "var(--color-brand-primary)" }}
-            >
-              <span className="material-symbols-rounded" style={{ fontSize: 14 }}>
-                close
-              </span>
-              ফিল্টার মুছুন
-            </button>
-          )}
-        </div>
-
-        {filtersActive && (
-          <div className="mt-2 flex flex-wrap gap-2">
-            {category !== "All" && (
-              <button
-                type="button"
-                onClick={() => setCategory("All")}
-                className="tap inline-flex items-center gap-1 rounded-full py-1.5 pl-3 pr-2 text-xs font-semibold"
-                style={{ background: "color-mix(in srgb, var(--color-brand-primary) 12%, transparent)", color: "var(--color-brand-primary)" }}
-              >
-                {category}
-                <span className="material-symbols-rounded" style={{ fontSize: 14 }}>
-                  close
-                </span>
-              </button>
-            )}
-            {mode !== "All" && (
-              <button
-                type="button"
-                onClick={() => setMode("All")}
-                className="tap inline-flex items-center gap-1 rounded-full py-1.5 pl-3 pr-2 text-xs font-semibold"
-                style={{ background: "color-mix(in srgb, var(--color-brand-primary) 12%, transparent)", color: "var(--color-brand-primary)" }}
-              >
-                {mode}
-                <span className="material-symbols-rounded" style={{ fontSize: 14 }}>
-                  close
-                </span>
-              </button>
-            )}
-          </div>
-        )}
-
-        <div className="relative -mx-4 mt-4">
-          <div className="flex gap-2 overflow-x-auto px-4 pb-1" style={{ scrollbarWidth: "none" }}>
-            {PROGRAM_CATEGORIES.map((c) => {
-              const active = category === c.key;
-              return (
-                <button
-                  key={c.key}
-                  type="button"
-                  onClick={() => setCategory(c.key)}
-                  className="tap shrink-0 rounded-full px-4 py-2.5 text-xs font-semibold"
-                  style={
-                    active
-                      ? { background: "var(--color-brand-primary)", color: "white" }
-                      : { background: "var(--color-surface)", color: "var(--color-text-secondary)", border: "1px solid var(--color-border)" }
-                  }
-                >
-                  {c.label}
-                </button>
-              );
-            })}
-          </div>
-          <span
-            aria-hidden
-            className="pointer-events-none absolute right-0 top-0 h-full w-8"
-            style={{ background: "linear-gradient(90deg, transparent, var(--color-bg-canvas))" }}
-          />
-        </div>
-
-        <div className="mt-4 flex flex-col gap-4 lg:grid lg:grid-cols-2">
-          {filtered.map((program) => (
-            <div
-              key={program.id}
-              className="overflow-hidden rounded-[var(--radius-lg)] bg-[var(--color-surface)] shadow-[var(--shadow-subtle)]"
-            >
-              <div
-                className="relative flex h-[190px] items-end overflow-hidden p-4"
-                style={{ background: `linear-gradient(135deg, ${program.gradient[0]} 0%, ${program.gradient[1]} 100%)` }}
-              >
-                {program.image && (
-                  <img
-                    src={program.image}
-                    alt=""
-                    className="absolute inset-0 h-full w-full object-cover"
-                  />
-                )}
-                <span
-                  aria-hidden
-                  className="absolute inset-0"
-                  style={{ background: program.image ? "linear-gradient(180deg, rgba(0,0,0,0.04), rgba(0,0,0,0.7))" : "transparent" }}
-                />
-                <span
-                  aria-hidden
-                  className="absolute -right-4 -top-4 h-20 w-20 rounded-full"
-                  style={{ background: program.image ? "rgba(255,255,255,0.08)" : "rgba(255,255,255,0.12)" }}
-                />
-                <p className="relative text-base font-bold leading-snug text-white">{program.title}</p>
-              </div>
-              <div className="flex flex-col gap-3 p-4">
-                <div className="flex items-center justify-between gap-2">
-                  <span
-                    className="inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold"
-                    style={{ background: "var(--color-border)", color: "var(--color-text-primary)" }}
-                  >
-                    <span className="material-symbols-rounded" style={{ fontSize: 14 }}>
-                      {CATEGORY_ICON[program.category]}
-                    </span>
-                    {program.category}
+              <span className="relative flex h-[82px] w-[82px] items-center justify-center">
+                <span className="relative flex h-[82px] w-[82px] items-center justify-center rounded-full text-center font-bold" style={{ color: CHIP_COLORS[c.slug] }}>
+                  <span className="absolute inset-0 rounded-full" style={{ background: CHIP_COLORS[c.slug], opacity: "var(--icon-bg-opacity)" }} />
+                  <span className="relative text-xs leading-tight">
+                    {c.slug === "model-test" ? "Model Test" : c.slug === "admission" ? "Admission" : `Class ${c.slug}`}
                   </span>
-                  {program.startsAt && (
-                    <span className="text-right text-xs text-[var(--color-text-secondary)]">শুরু: {program.startsAt}</span>
-                  )}
-                </div>
-                <ul className="space-y-1 text-xs leading-relaxed text-[var(--color-text-secondary)]">
-                  {CATEGORY_HIGHLIGHTS[program.category].map((highlight) => (
-                    <li key={highlight} className="flex gap-1.5">
-                      <span className="text-[var(--color-brand-primary)]">•</span>
-                      <span>{highlight}</span>
-                    </li>
-                  ))}
-                </ul>
-                <div className="flex items-center justify-between gap-2 border-t pt-3" style={{ borderColor: "var(--color-border)" }}>
-                  <span className="min-w-0 flex-1 truncate text-xs text-[var(--color-text-secondary)]">{program.modes.join(" · ")}</span>
-                  <div className="flex shrink-0 items-center gap-2">
-                    <a
-                      href={`https://udvash.com/Program/Details/${program.id}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="tap whitespace-nowrap rounded-[5px] border px-3 py-2 text-xs font-semibold text-[var(--color-brand-primary)]"
-                      style={{ borderColor: "var(--color-brand-primary)" }}
-                    >
-                      Details
-                    </a>
-                    <a
-                      href="https://online.udvash-unmesh.com/"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="tap whitespace-nowrap rounded-[5px] px-3 py-2 text-xs font-semibold text-white"
-                      style={{ background: "var(--color-brand-primary)" }}
-                    >
-                      Enroll Now
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </div>
+                </span>
+              </span>
+            </Link>
           ))}
-          {filtered.length === 0 && (
-            <p className="py-8 text-center text-sm text-[var(--color-text-secondary)]">কোনো প্রোগ্রাম পাওয়া যায়নি।</p>
-          )}
         </div>
-       </PullToRefresh>
       </main>
       <BottomNav />
     </>
