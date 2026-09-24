@@ -17,18 +17,18 @@ export default function ServiceCard({
   return (
     <Link
       href={href}
-      className="tap flex items-center gap-5 rounded-[var(--radius-lg)] border bg-[var(--color-surface)] px-5 py-8 transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-brand-primary)]"
+      className="tap flex items-center gap-3 rounded-[var(--radius-lg)] border bg-[var(--color-surface)] px-3 py-8 transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-brand-primary)] sm:gap-5 sm:px-5 sm:py-10"
       style={{ borderColor: "color-mix(in srgb, var(--color-border) 50%, transparent)", boxShadow: "var(--shadow-subtle)" }}
     >
-      <span className="relative flex h-20 w-20 shrink-0 items-center justify-center rounded-full text-lg">
+      <span className="relative flex h-14 w-14 shrink-0 items-center justify-center rounded-full text-lg sm:h-20 sm:w-20">
         <span className="absolute inset-0 rounded-full" style={{ background: iconBg, opacity: "var(--icon-bg-opacity)" }} />
         <span className="relative flex items-center justify-center">{icon}</span>
       </span>
       <span className="min-w-0 flex-1">
-        <span className="block truncate text-2xl font-semibold text-[var(--color-text-primary)]">
+        <span className="block text-xl font-semibold leading-snug text-[var(--color-text-primary)] sm:text-2xl">
           {title}
         </span>
-        <span className="mt-1.5 block text-sm text-[var(--color-text-secondary)]">{subtitle}</span>
+        <span className="mt-1 block text-xs text-[var(--color-text-secondary)] sm:mt-1.5 sm:text-sm">{subtitle}</span>
       </span>
       <span className="material-symbols-rounded shrink-0" style={{ fontSize: 16, color: "var(--color-text-secondary)" }}>
         arrow_forward_ios

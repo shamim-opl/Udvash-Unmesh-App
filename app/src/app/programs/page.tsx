@@ -17,6 +17,11 @@ const CHIP_COLORS: Record<string, string> = {
   admission: "#E53935",
 };
 
+const CHIP_ICON: Record<string, string> = {
+  "model-test": "edit_note",
+  admission: "school",
+};
+
 export default function ProgramsPickClassPage() {
   return (
     <>
@@ -30,23 +35,31 @@ export default function ProgramsPickClassPage() {
         <p className="mt-2 text-sm text-[var(--color-text-secondary)]">নিজের ক্লাস বেছে নাও, পছন্দের প্রোগ্রাম যুক্ত করো তোমার পোর্টালে</p>
 
         <div className="mt-4 grid grid-cols-[repeat(auto-fill,minmax(96px,1fr))] gap-3 lg:grid-cols-5">
-          {CLASS_CHIPS.map((c) => (
-            <Link
-              key={c.slug}
-              href={`/programs/${c.slug}`}
-              className="tap flex flex-col items-center gap-2 rounded-[var(--radius-lg)] border bg-[var(--color-surface)] px-2 py-5 text-center transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-brand-primary)]"
-              style={{ borderColor: "color-mix(in srgb, var(--color-border) 50%, transparent)", boxShadow: "var(--shadow-subtle)" }}
-            >
-              <span className="relative flex h-[82px] w-[82px] items-center justify-center">
-                <span className="relative flex h-[82px] w-[82px] items-center justify-center rounded-full text-center font-bold" style={{ color: CHIP_COLORS[c.slug] }}>
+          {CLASS_CHIPS.map((c) => {
+            const isNumeric = c.slug !== "model-test" && c.slug !== "admission";
+            return (
+              <Link
+                key={c.slug}
+                href={`/programs/${c.slug}`}
+                className="tap flex flex-col items-center gap-2 rounded-[var(--radius-lg)] border bg-[var(--color-surface)] px-2 py-5 text-center transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-brand-primary)]"
+                style={{ borderColor: "color-mix(in srgb, var(--color-border) 50%, transparent)", boxShadow: "var(--shadow-subtle)" }}
+              >
+                <span className="relative flex h-16 w-16 items-center justify-center rounded-full" style={{ color: CHIP_COLORS[c.slug] }}>
                   <span className="absolute inset-0 rounded-full" style={{ background: CHIP_COLORS[c.slug], opacity: "var(--icon-bg-opacity)" }} />
-                  <span className="relative text-xs leading-tight">
-                    {c.slug === "model-test" ? "Model Test" : c.slug === "admission" ? "Admission" : `Class ${c.slug}`}
-                  </span>
+                  {isNumeric ? (
+                    <span className="relative text-2xl font-bold">{c.slug}</span>
+                  ) : (
+                    <span className="material-symbols-rounded relative" style={{ fontSize: 28 }}>
+                      {CHIP_ICON[c.slug]}
+                    </span>
+                  )}
                 </span>
-              </span>
-            </Link>
-          ))}
+                <span className="text-xs font-medium leading-tight text-[var(--color-text-secondary)]">
+                  {isNumeric ? `Class ${c.label}` : c.label}
+                </span>
+              </Link>
+            );
+          })}
         </div>
       </main>
       <BottomNav />

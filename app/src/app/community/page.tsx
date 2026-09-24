@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import AppHeader from "@/components/AppHeader";
+import BackButton from "@/components/BackButton";
 import BottomNav from "@/components/BottomNav";
 
 const GROUPS = [
@@ -20,6 +21,7 @@ export default function CommunityPage() {
     <>
       <AppHeader />
       <header className="relative mb-2 flex items-center justify-center gap-3 px-4 py-3">
+        <span className="absolute left-4 lg:left-8"><BackButton href="/" /></span>
         <h1 className="font-heading text-[18px] font-semibold leading-none text-[#616161]">Community</h1>
       </header>
 

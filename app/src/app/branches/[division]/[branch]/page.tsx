@@ -71,38 +71,40 @@ export default async function BranchDetailsPage({
           </div>
         </div>
 
-        <section
-          className="mt-4 rounded-[var(--radius-lg)] border bg-[var(--color-surface)] p-4"
-          style={{ borderColor: "color-mix(in srgb, var(--color-border) 50%, transparent)", boxShadow: "var(--shadow-subtle)" }}
-        >
-          <p className="mb-[14px] text-sm font-medium text-[var(--color-text-secondary)] opacity-70">ঠিকানাঃ</p>
-          <div className="flex items-start gap-3">
-            <p className="text-base leading-relaxed text-[var(--color-text-primary)]">
-              {branch.address ?? `${branch.name} (${branch.en}), ${division.name}`}
-            </p>
-          </div>
-          <a
-            href={mapsHref(branch, division)}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="tap mt-[18px] flex w-full items-center justify-center gap-2 rounded-full py-3 text-sm font-semibold text-white"
-            style={{ background: "var(--color-brand-primary)" }}
+        <div className="mt-4 lg:grid lg:grid-cols-2 lg:items-stretch lg:gap-4">
+          <section
+            className="flex flex-col rounded-[var(--radius-lg)] border bg-[var(--color-surface)] p-4"
+            style={{ borderColor: "color-mix(in srgb, var(--color-border) 50%, transparent)", boxShadow: "var(--shadow-subtle)" }}
           >
-            <span className="material-symbols-rounded" aria-hidden style={{ fontSize: 18 }}>
-              near_me
-            </span>
-            Open in Google Maps
-          </a>
-        </section>
+            <p className="mb-[14px] text-sm font-medium text-[var(--color-text-secondary)] opacity-70">ঠিকানাঃ</p>
+            <div className="flex items-start gap-3">
+              <p className="text-base leading-relaxed text-[var(--color-text-primary)]">
+                {branch.address ?? `${branch.name} (${branch.en}), ${division.name}`}
+              </p>
+            </div>
+            <a
+              href={mapsHref(branch, division)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="tap mt-[18px] flex w-full items-center justify-center gap-2 rounded-full py-3 text-sm font-semibold text-white lg:mt-auto"
+              style={{ background: "var(--color-brand-primary)" }}
+            >
+              <span className="material-symbols-rounded" aria-hidden style={{ fontSize: 18 }}>
+                near_me
+              </span>
+              Open in Google Maps
+            </a>
+          </section>
 
-        <div className="relative mt-4 aspect-[4/3] w-full overflow-hidden rounded-[var(--radius-lg)] border" style={{ borderColor: "color-mix(in srgb, var(--color-border) 50%, transparent)" }}>
-          <iframe
-            title={`${branch.name} — Google Maps`}
-            src={mapsEmbedHref(branch, division)}
-            className="absolute inset-0 h-full w-full"
-            loading="lazy"
-            referrerPolicy="no-referrer-when-downgrade"
-          />
+          <div className="relative mt-4 aspect-[4/3] w-full overflow-hidden rounded-[var(--radius-lg)] border lg:mt-0" style={{ borderColor: "color-mix(in srgb, var(--color-border) 50%, transparent)" }}>
+            <iframe
+              title={`${branch.name} — Google Maps`}
+              src={mapsEmbedHref(branch, division)}
+              className="absolute inset-0 h-full w-full"
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+            />
+          </div>
         </div>
 
         <div className="mt-5 flex justify-center">
