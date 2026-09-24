@@ -1,3 +1,5 @@
+import { DIVISION_DISTRICTS } from "@/data/districts";
+
 export type Branch = {
   name: string;
   en: string;
@@ -12,6 +14,36 @@ export type Division = {
   en: string;
   branches: Branch[];
 };
+
+const BRANCH_DISTRICT_OVERRIDES: Record<string, string> = {
+  Bhairab: "কিশোরগঞ্জ",
+  Monohardi: "নরসিংদী",
+  Madhupur: "টাঙ্গাইল",
+  Madhukhali: "ফরিদপুর",
+  Ghatail: "টাঙ্গাইল",
+  Sakhipur: "টাঙ্গাইল",
+  Sarishabari: "জামালপুর",
+  Ishwardi: "পাবনা",
+  Ullapara: "সিরাজগঞ্জ",
+  Belkuchi: "সিরাজগঞ্জ",
+  Bera: "পাবনা",
+  "Dinajpur (Birganj)": "দিনাজপুর",
+  Gobindaganj: "গাইবান্ধা",
+  "Kurigram (Nageshwari)": "কুড়িগ্রাম",
+  Saidpur: "নীলফামারী",
+  "Pirganj (Rangpur)": "রংপুর",
+  "Pirganj (Thakurgaon)": "ঠাকুরগাঁও",
+};
+
+const districtNames = DIVISION_DISTRICTS.flatMap((division) => division.districts);
+
+export function getBranchDistrict(branch: Branch): string | null {
+  const override = BRANCH_DISTRICT_OVERRIDES[branch.en];
+  if (override) return override;
+
+  const searchable = `${branch.name} ${branch.en} ${branch.address ?? ""}`.toLocaleLowerCase();
+  return districtNames.find((district) => searchable.includes(district.toLocaleLowerCase())) ?? null;
+}
 
 export function slugify(en: string): string {
   return en
@@ -33,7 +65,7 @@ export const mapsQuery = (branch: Branch, division: Division) => `Udvash-Unmesh 
 export const mapsHref = (branch: Branch, division: Division) =>
   `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(mapsQuery(branch, division))}`;
 export const mapsEmbedHref = (branch: Branch, division: Division) =>
-  `https://www.google.com/maps?q=${encodeURIComponent(mapsQuery(branch, division))}&output=embed`;
+  `https://maps.google.com/maps?q=${encodeURIComponent(mapsQuery(branch, division))}&output=embed`;
 export const telHref = (phone: string) => `tel:${phone.startsWith("88") ? `+${phone}` : phone}`;
 
 // Real branch names and phone numbers scraped from https://udvash.com/Branch on 2026-09-15

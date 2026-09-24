@@ -15,21 +15,21 @@ export default function Home() {
 
           <section className="mt-6 px-4">
             <h2 className="mb-3 text-sm font-medium text-[var(--color-text-secondary)] opacity-70">
-              তোমার জন্য
+              Explore Learning
             </h2>
             <div className="flex flex-col gap-3 md:grid md:grid-cols-2">
               <ServiceCard
                 href="/free-courses"
                 icon={<FreeCourseIcon color="#FC5A5A" size={36} />}
                 iconBg="#FC5A5A"
-                title="ট্রায়াল / ফ্রি কোর্স"
+                title="Trial / Free Courses"
                 subtitle="শেখা শুরু হোক একদম বিনামূল্যে"
               />
               <ServiceCard
                 href="/programs"
-                icon={<BookIcon color="#00BA00" size={35} />}
+                icon={<BookIcon color="#00BA00" size={34} />}
                 iconBg="#00BA00"
-                title="প্রোগ্রামসমূহ"
+                title="Programs"
                 subtitle="আপনার প্রয়োজন অনুযায়ী বেছে নিন"
               />
             </div>

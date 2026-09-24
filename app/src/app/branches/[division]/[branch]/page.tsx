@@ -3,7 +3,7 @@ import Link from "next/link";
 import AppHeader from "@/components/AppHeader";
 import BackButton from "@/components/BackButton";
 import BottomNav from "@/components/BottomNav";
-import { DIVISIONS, findBranch, mapsHref, mapsEmbedHref, telHref, slugify } from "@/data/branches";
+import { DIVISIONS, findBranch, getBranchDistrict, mapsHref, mapsEmbedHref, telHref, slugify } from "@/data/branches";
 
 export function generateStaticParams() {
   return DIVISIONS.flatMap((division) =>
@@ -20,6 +20,7 @@ export default async function BranchDetailsPage({
   const found = findBranch(divisionSlug, branchSlug);
   if (!found) notFound();
   const { branch, division } = found;
+  const phoneSlots = [branch.phones[0] ?? null, branch.phones[1] ?? null];
 
   return (
     <>
@@ -49,24 +50,39 @@ export default async function BranchDetailsPage({
             </span>
             <div className="min-w-0">
               <h2 className="text-2xl font-bold text-white">{branch.name}</h2>
+              <p className="mt-0.5 text-sm text-white/80">
+                {getBranchDistrict(branch) ? `${getBranchDistrict(branch)}, ${division.name}` : division.name}
+              </p>
             </div>
           </div>
 
-          <div className="relative mt-4 flex flex-wrap gap-2">
-            {branch.phones.map((phone) => (
-              <a
-                key={phone}
-                href={telHref(phone)}
-                aria-label={`${branch.name} শাখায় কল করুন ${phone}`}
-                className="tap flex items-center gap-1.5 rounded-full bg-white px-3 py-2 text-xs font-semibold"
-                style={{ color: "var(--color-brand-primary)" }}
-              >
-                <span className="material-symbols-rounded" aria-hidden style={{ fontSize: 14 }}>
-                  call
-                </span>
-                {phone}
-              </a>
-            ))}
+          <div className="relative mt-4 grid grid-cols-2 border-t border-white/20">
+            {phoneSlots.map((phone, index) => {
+              const className = "tap relative flex min-w-0 items-center justify-center gap-2 px-2 pb-1.5 pt-3 text-sm font-medium text-white transition-colors md:hover:text-white/80";
+              if (!phone) {
+                return (
+                  <span key={`empty-phone-${index}`} className={className} style={{ color: "rgba(255,255,255,0.65)" }}>
+                    --
+                    {index === 0 && <span className="pointer-events-none absolute right-0 top-1.5 h-[calc(100%-10px)] w-px bg-white/20" aria-hidden />}
+                  </span>
+                );
+              }
+
+              return (
+                <a
+                  key={phone}
+                  href={telHref(phone)}
+                  aria-label={`${branch.name} শাখায় কল করুন ${phone}`}
+                  className={className}
+                >
+                  <span className="material-symbols-rounded" aria-hidden style={{ fontSize: 18 }}>
+                    call
+                  </span>
+                  {phone}
+                  {index === 0 && <span className="pointer-events-none absolute right-0 top-1.5 h-[calc(100%-10px)] w-px bg-white/20" aria-hidden />}
+                </a>
+              );
+            })}
           </div>
         </div>
 

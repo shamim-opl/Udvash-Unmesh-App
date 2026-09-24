@@ -7,11 +7,13 @@ import AppHeader from "@/components/AppHeader";
 import BottomNav from "@/components/BottomNav";
 import PullToRefresh from "@/components/PullToRefresh";
 import DragScroll from "@/components/DragScroll";
-import { DIVISIONS, telHref, slugify, type Branch, type Division } from "@/data/branches";
+import { DIVISIONS, getBranchDistrict, telHref, slugify, type Branch, type Division } from "@/data/branches";
+import { DIVISION_DISTRICTS } from "@/data/districts";
 
 function BranchCard({ branch, division }: { branch: Branch; division: Division }) {
   const router = useRouter();
   const href = `/branches/${division.slug}/${slugify(branch.en)}`;
+  const phoneSlots = [branch.phones[0] ?? null, branch.phones[1] ?? null];
 
   return (
     <div
@@ -25,25 +27,18 @@ function BranchCard({ branch, division }: { branch: Branch; division: Division }
         }
       }}
       aria-label={`${branch.name} শাখার বিবরণ দেখুন`}
-      className="group/card flex h-full cursor-pointer flex-col gap-3 rounded-[var(--radius-lg)] border bg-[var(--color-surface)] p-3.5 transition-[transform,border-color,box-shadow] duration-150 ease-out hover:-translate-y-0.5 hover:border-[var(--color-brand-primary)] hover:shadow-[var(--shadow-high)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-brand-primary)]"
+      className="group/card flex h-full cursor-pointer flex-col gap-3 rounded-[var(--radius-lg)] border bg-[var(--color-surface)] p-4 transition-[transform,border-color,box-shadow] duration-150 ease-out md:hover:-translate-y-0.5 md:hover:border-[var(--color-brand-primary)] md:hover:shadow-[var(--shadow-high)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-brand-primary)]"
       style={{ borderColor: "var(--color-border)", boxShadow: "var(--shadow-subtle)" }}
     >
       <div className="flex items-center gap-3">
-        <span className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-full">
-          <span
-            className="material-symbols-rounded relative"
-            aria-hidden
-            style={{ fontSize: 28, color: "var(--color-text-secondary)", opacity: 0.6, fontVariationSettings: '"FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24' }}
-          >
-            pin_drop
-          </span>
-        </span>
         <span className="min-w-0 flex-1">
           <span className="block truncate text-[15px] font-semibold leading-snug text-[var(--color-text-primary)]">{branch.name}</span>
-          <span className="block truncate text-xs leading-snug text-[var(--color-text-secondary)]">{division.name}</span>
+          <span className="block truncate text-xs leading-snug text-[var(--color-text-secondary)]">
+            {getBranchDistrict(branch) ? `${getBranchDistrict(branch)}, ${division.name}` : division.name}
+          </span>
         </span>
         <span
-          className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full transition-colors duration-150 group-hover/card:bg-[var(--color-brand-primary)] group-hover/card:[&>span]:!text-white"
+          className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full transition-colors duration-150 md:group-hover/card:bg-[var(--color-brand-primary)] md:group-hover/card:[&>span]:!text-white"
           style={{ background: "color-mix(in srgb, var(--color-brand-primary) 8%, transparent)" }}
         >
           <span className="material-symbols-rounded" aria-hidden style={{ fontSize: 16, color: "var(--color-brand-primary)" }}>
@@ -51,22 +46,35 @@ function BranchCard({ branch, division }: { branch: Branch; division: Division }
           </span>
         </span>
       </div>
-      <div className="mt-auto flex flex-wrap gap-1.5 border-t pt-3" style={{ borderColor: "color-mix(in srgb, var(--color-border) 60%, transparent)" }}>
-        {branch.phones.map((phone) => (
-          <a
-            key={phone}
-            href={telHref(phone)}
-            onClick={(e) => e.stopPropagation()}
-            aria-label={`${branch.name} শাখায় কল করুন ${phone}`}
-            className="tap inline-flex min-w-0 items-center gap-1 rounded-full px-2 py-1.5 text-xs font-medium transition-colors hover:!bg-[var(--color-brand-primary)] hover:!text-white"
-            style={{ background: "color-mix(in srgb, var(--color-brand-primary) 8%, transparent)", color: "var(--color-brand-primary)" }}
-          >
-            <span className="material-symbols-rounded" aria-hidden style={{ fontSize: 14 }}>
-              call
-            </span>
-            {phone}
-          </a>
-        ))}
+      <div className="mt-auto grid grid-cols-2 border-t" style={{ borderColor: "color-mix(in srgb, var(--color-border) 60%, transparent)" }}>
+        {phoneSlots.map((phone, index) => {
+          const className = "tap relative flex min-w-0 items-center justify-center gap-2 px-2 pb-1.5 pt-3 text-sm font-medium transition-colors md:hover:!text-[var(--color-brand-primary)]";
+          if (!phone) {
+            return (
+              <span key={`empty-phone-${index}`} className={className} style={{ color: "var(--color-text-secondary)" }}>
+                --
+                {index === 0 && <span className="pointer-events-none absolute right-0 top-1.5 h-[calc(100%-10px)] w-px bg-[color-mix(in_srgb,var(--color-border)_60%,transparent)]" aria-hidden />}
+              </span>
+            );
+          }
+
+          return (
+            <a
+              key={phone}
+              href={telHref(phone)}
+              onClick={(e) => e.stopPropagation()}
+              aria-label={`${branch.name} শাখায় কল করুন ${phone}`}
+              className={className}
+              style={{ color: "var(--color-brand-primary)" }}
+            >
+              <span className="material-symbols-rounded" aria-hidden style={{ fontSize: 18 }}>
+                call
+              </span>
+              {phone}
+              {index === 0 && <span className="pointer-events-none absolute right-0 top-1.5 h-[calc(100%-10px)] w-px bg-[color-mix(in_srgb,var(--color-border)_60%,transparent)]" aria-hidden />}
+            </a>
+          );
+        })}
       </div>
     </div>
   );
@@ -75,6 +83,7 @@ function BranchCard({ branch, division }: { branch: Branch; division: Division }
 export default function BranchesPage() {
   const [query, setQuery] = useState("");
   const [mobileTab, setMobileTab] = useState<string | null>(null);
+  const [districtTab, setDistrictTab] = useState<string | null>(null);
 
   const totalBranches = DIVISIONS.reduce((sum, d) => sum + d.branches.length, 0);
   const q = query.trim().toLowerCase();
@@ -85,12 +94,19 @@ export default function BranchesPage() {
           (b) =>
             b.name.toLowerCase().includes(q) ||
             b.en.toLowerCase().includes(q) ||
+            (getBranchDistrict(b)?.toLowerCase().includes(q) ?? false) ||
             b.phones.some((p) => p.includes(q)) ||
             d.name.toLowerCase().includes(q) ||
             d.en.toLowerCase().includes(q)
         ),
       })).filter((d) => d.branches.length > 0)
     : DIVISIONS;
+  const selectedDivision = mobileTab ? DIVISIONS.find((division) => division.slug === mobileTab) : null;
+  const districtOptions = selectedDivision
+    ? DIVISION_DISTRICTS.find((division) => division.slug === selectedDivision.slug)?.districts.filter((district) =>
+        selectedDivision.branches.some((branch) => getBranchDistrict(branch) === district)
+      ) ?? []
+    : [];
 
   return (
     <>
@@ -121,54 +137,69 @@ export default function BranchesPage() {
         </div>
 
         <div className="mt-5">
-          <DragScroll
-            tag="div"
-            role="tablist"
-            aria-label="বিভাগ"
-            className="-mx-4 flex cursor-grab gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-          >
-            <button
-              type="button"
-              role="tab"
-              aria-selected={mobileTab === null}
-              onClick={() => setMobileTab(null)}
-              className="tap shrink-0 rounded-full border px-4 py-2 text-sm font-semibold transition-colors"
-              style={{
-                borderColor: mobileTab === null ? "var(--color-brand-primary)" : "var(--color-border)",
-                background: mobileTab === null ? "var(--color-brand-primary)" : "var(--color-surface)",
-                color: mobileTab === null ? "white" : "var(--color-text-primary)",
-              }}
-            >
-              All
-            </button>
-            {DIVISIONS.map((division) => {
-              const active = mobileTab === division.slug;
-              return (
-                <button
-                  key={division.slug}
-                  type="button"
-                  role="tab"
-                  aria-selected={active}
-                  onClick={() => setMobileTab(division.slug)}
-                  className="tap shrink-0 rounded-full border px-4 py-2 text-sm font-semibold transition-colors"
-                  style={{
-                    borderColor: active ? "var(--color-brand-primary)" : "var(--color-border)",
-                    background: active ? "var(--color-brand-primary)" : "var(--color-surface)",
-                    color: active ? "white" : "var(--color-text-primary)",
+          <div className="grid grid-cols-2 gap-2">
+            <label className="min-w-0">
+              <span className="mb-1.5 block text-xs font-normal text-[var(--color-text-secondary)]">Division</span>
+              <span className="relative block">
+                <select
+                  value={mobileTab ?? ""}
+                  onChange={(event) => {
+                    setMobileTab(event.target.value || null);
+                    setDistrictTab(null);
                   }}
+                  aria-label="Select division"
+                  className="w-full appearance-none rounded-[5px] border bg-[var(--color-surface)] px-3 py-2.5 pr-9 text-sm font-semibold text-[var(--color-text-primary)] outline-none"
+                  style={{ borderColor: "var(--color-border)" }}
                 >
-                  {division.en}
-                </button>
-              );
-            })}
-          </DragScroll>
+                  <option value="">All Divisions</option>
+                  {DIVISIONS.map((division) => (
+                    <option key={division.slug} value={division.slug}>
+                      {division.en}
+                    </option>
+                  ))}
+                </select>
+                <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 material-symbols-rounded text-[var(--color-text-secondary)]" aria-hidden style={{ fontSize: 18 }}>
+                  expand_more
+                </span>
+              </span>
+            </label>
+
+            <label className="min-w-0">
+              <span className="mb-1.5 block text-xs font-normal text-[var(--color-text-secondary)]">District</span>
+              <span className="relative block">
+                <select
+                  value={districtTab ?? ""}
+                  onChange={(event) => setDistrictTab(event.target.value || null)}
+                  aria-label="Select district"
+                  disabled={!selectedDivision || districtOptions.length === 0}
+                  className="w-full appearance-none rounded-[5px] border bg-[var(--color-surface)] px-3 py-2.5 pr-9 text-sm font-semibold text-[var(--color-text-primary)] outline-none disabled:cursor-not-allowed disabled:opacity-50"
+                  style={{ borderColor: "var(--color-border)" }}
+                >
+                  <option value="">All Districts</option>
+                  {districtOptions.map((district) => (
+                    <option key={district} value={district}>
+                      {district}
+                    </option>
+                  ))}
+                </select>
+                <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 material-symbols-rounded text-[var(--color-text-secondary)]" aria-hidden style={{ fontSize: 18 }}>
+                  expand_more
+                </span>
+              </span>
+            </label>
+          </div>
 
           {(() => {
-            const tabFiltered = mobileTab ? filtered.filter((d) => d.slug === mobileTab) : filtered;
+            const tabFiltered = (mobileTab ? filtered.filter((d) => d.slug === mobileTab) : filtered).map((division) => ({
+              ...division,
+              branches: districtTab
+                ? division.branches.filter((branch) => getBranchDistrict(branch) === districtTab)
+                : division.branches,
+            }));
             const branchCount = tabFiltered.reduce((sum, d) => sum + d.branches.length, 0);
             return (
               <>
-                <p className="mb-3 mt-4 text-sm font-medium text-[var(--color-brand-primary)]">
+                <p className="mb-3 mt-6 text-sm font-medium text-[var(--color-brand-primary)]">
                   {branchCount}টি শাখা পাওয়া গেছে
                 </p>
                 <div className="flex flex-col gap-3 md:grid md:grid-cols-2 lg:grid-cols-3">
