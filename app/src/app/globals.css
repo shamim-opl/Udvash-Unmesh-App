@@ -90,15 +90,10 @@
   src: url("/fonts/material-symbols-rounded.ttf") format("truetype");
 }
 
-html {
-  overscroll-behavior-y: contain;
-}
-
 body {
   background: var(--color-bg-canvas);
   color: var(--color-text-primary);
   font-family: var(--font-heading);
-  overscroll-behavior-y: contain;
 }
 
 select,
